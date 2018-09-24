@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.enrico.dg:outbound-impl:unknown">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/enrico/dg/outbound-impl/unknown/outbound-impl-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/enrico/dg/outbound-impl/unknown/outbound-impl-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/enrico/dg/outbound-impl/unknown/outbound-impl-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
