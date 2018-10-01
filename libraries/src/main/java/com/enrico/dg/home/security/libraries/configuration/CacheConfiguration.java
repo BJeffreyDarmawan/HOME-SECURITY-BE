@@ -4,7 +4,10 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
@@ -12,9 +15,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class CacheConfiguration {
 
   @Bean
-  public CacheManager cacheManager(RedisTemplate redisTemplate) {
-    RedisCacheManager cacheManager = new RedisCacheManager(redisTemplate);
+  public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+    RedisCacheWriter cacheWriter = RedisCacheWriter.lockingRedisCacheWriter(redisConnectionFactory);
 
-    return cacheManager;
+    return new RedisCacheManager(cacheWriter, RedisCacheConfiguration.defaultCacheConfig());
   }
 }

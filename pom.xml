@@ -24,7 +24,7 @@
     <joda.time.version>2.9.9</joda.time.version>
     <fongo.version>2.1.0</fongo.version>
     <apache.common.lang3.version>3.6</apache.common.lang3.version>
-    <springfox.version>2.7.0</springfox.version>
+    <springfox.version>2.9.2</springfox.version>
     <retrofit.version>2.3.0</retrofit.version>
     <hibernate.version>6.0.5.Final</hibernate.version>
     <jacoco.maven.plugin.version>0.7.9</jacoco.maven.plugin.version>
