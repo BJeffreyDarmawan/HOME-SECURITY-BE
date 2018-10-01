@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequestBuilder;
-import org.apache.log4j.MDC;
+import org.jboss.logging.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
