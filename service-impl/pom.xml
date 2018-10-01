@@ -32,5 +32,9 @@
       <groupId>com.enrico.dg</groupId>
       <artifactId>libraries</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.enrico.dg</groupId>
+      <artifactId>dao</artifactId>
+    </dependency>
   </dependencies>
 </project>
