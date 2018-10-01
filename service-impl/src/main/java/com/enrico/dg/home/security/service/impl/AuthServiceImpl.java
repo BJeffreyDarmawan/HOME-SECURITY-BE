@@ -16,7 +16,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.passay.AlphabeticalSequenceRule;
 import org.passay.DigitCharacterRule;
 import org.passay.LengthRule;
