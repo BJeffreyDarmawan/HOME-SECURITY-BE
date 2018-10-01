@@ -84,6 +84,8 @@
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.3.1.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:4.2.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.passay:passay:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.cryptacular:cryptacular:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.github.fakemongo:fongo:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mozilla:rhino:1.7.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vividsolutions:jts:1.13" level="project" />
