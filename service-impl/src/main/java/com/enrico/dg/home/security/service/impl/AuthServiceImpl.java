@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
     User newUser = new User();
 
     if(PasswordHelper.isPasswordValid(user.getPassword())) {
-        newUser.setPassword(user.getPassword());
+        newUser.setPassword(PasswordHelper.encryptPassword(user.getPassword()));
     }
 
     newUser.setName(user.getName());
@@ -96,4 +96,3 @@ public class AuthServiceImpl implements AuthService {
 
 
 }
-

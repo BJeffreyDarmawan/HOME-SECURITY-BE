@@ -27,14 +27,19 @@ public class UserController {
     private AuthService authService;
 
     @PostMapping(ApiPath.SIGN_UP)
-    public BaseResponse<UserResponse> create(
-            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-            @RequestBody UserRequest userRequest) {
+    public BaseResponse<UserResponse> signUp(@RequestBody UserRequest userRequest) {
 
         User user = authService.register(toUser(userRequest));
 
         return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
                 null, toUserResponse(user));
+    }
+
+    @PostMapping(ApiPath.SIGN_IN)
+    public BaseResponse<String> signIn(@RequestParam String email, @RequestParam String password) {
+
+        //return user data + token (see UserResponse)
+        return null;
     }
 
     private User toUser(UserRequest userRequest) {

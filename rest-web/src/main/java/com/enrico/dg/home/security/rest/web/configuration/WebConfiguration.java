@@ -1,5 +1,6 @@
 package com.enrico.dg.home.security.rest.web.configuration;
 
+import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.rest.web.component.InterceptorRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(mandatoryParameterInterceptor());
+    registry.addInterceptor(mandatoryParameterInterceptor()).excludePathPatterns("/home-security/sign-in");
   }
 
   @Override

@@ -6,6 +6,7 @@ public class UserResponse {
     private String email;
     private String password;
     private String role;
+    private String token;
 
     public String getName() {
         return name;
@@ -39,13 +40,22 @@ public class UserResponse {
         this.role = role;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
-        return "UserRequest{" +
+        return "UserResponse{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", token='" + token + '\'' +
                 '}';
     }
 }
