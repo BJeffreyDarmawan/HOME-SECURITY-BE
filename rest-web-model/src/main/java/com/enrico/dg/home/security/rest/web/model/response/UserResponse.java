@@ -1,6 +1,8 @@
 package com.enrico.dg.home.security.rest.web.model.response;
 
-public class UserResponse {
+import com.enrico.dg.home.security.entity.CommonModel;
+
+public class UserResponse extends CommonModel {
 
     private String name;
     private String email;

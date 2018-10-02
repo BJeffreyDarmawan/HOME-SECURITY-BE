@@ -1,6 +1,8 @@
 package com.enrico.dg.home.security.rest.web.model.request;
 
-public class UserRequest {
+import com.enrico.dg.home.security.entity.CommonModel;
+
+public class UserRequest extends CommonModel {
 
     private String name;
     private String email;
