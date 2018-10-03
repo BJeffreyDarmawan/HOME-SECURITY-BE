@@ -19,9 +19,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(mandatoryParameterInterceptor())
-//            .excludePathPatterns(ApiPath.BASE_PATH + ApiPath.SIGN_UP)
-            .excludePathPatterns(ApiPath.BASE_PATH + ApiPath.SIGN_IN);
+    registry.addInterceptor(mandatoryParameterInterceptor()).excludePathPatterns(ApiPath.BASE_PATH + ApiPath.SIGN_IN);
   }
 
   @Override

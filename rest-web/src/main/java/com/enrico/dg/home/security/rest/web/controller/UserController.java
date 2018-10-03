@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -28,13 +29,21 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping(ApiPath.SIGN_UP)
-    public BaseResponse<UserResponse> signUp(@RequestBody UserRequest userRequest) {
+    @PostMapping(ApiPath.ADD_USER)
+    public BaseResponse<UserResponse> addUser(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @RequestBody UserRequest userRequest) {
 
-        User user = authService.register(toUser(userRequest));
+        if(authService.isTokenValid(mandatoryRequest.getAccessToken())) {
 
-        return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-                null, toUserResponse(user));
+          User user = authService.register(toUser(userRequest));
+
+          return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+                  null, toUserResponse(user));
+        } else {
+          throw new BusinessLogicException(ResponseCode.INVALID_TOKEN.getCode(),
+                  ResponseCode.INVALID_TOKEN.getMessage());
+        }
     }
 
     @PostMapping(ApiPath.SIGN_IN)
@@ -90,5 +99,10 @@ public class UserController {
       userResponse.setToken(token);
 
       return userResponse;
+    }
+
+    @ModelAttribute
+    public MandatoryRequest getMandatoryParameter(HttpServletRequest request) {
+      return (MandatoryRequest) request.getAttribute("mandatory");
     }
 }
