@@ -36,13 +36,12 @@ public class AuthServiceImpl implements AuthService {
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
-  public String createToken(String userId, int userLevel, String currentAccessToken) {
+  public String createToken(String userId) {
     try {
       Date currentDate = new Date();
       Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
       return JWT.create()
           .withClaim("userId", userId)
-          .withClaim("userLevel", userLevel)
           .withClaim("createdAt", currentDate)
           .withExpiresAt(new Date(currentDate.getTime() + 3600000))
           .sign(algorithm);
@@ -62,7 +61,6 @@ public class AuthServiceImpl implements AuthService {
       DecodedJWT jwt = verifier.verify(token);
       return new JWTokenClaimBuilder()
           .withUserId(jwt.getClaim("userId").asString())
-          .withUserLevel(jwt.getClaim("userLevel").asInt())
           .build();
 
     } catch (Exception exception) {
@@ -84,16 +82,31 @@ public class AuthServiceImpl implements AuthService {
     User newUser = new User();
 
     if(PasswordHelper.isPasswordValid(user.getPassword())) {
-        newUser.setPassword(user.getPassword());
+        newUser.setPassword(PasswordHelper.encryptPassword(user.getPassword()));
     }
 
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
     newUser.setRole(user.getRole());
 
-    return userRepository.save(newUser);
+    try{
+      return userRepository.save(newUser);
+    } catch (Exception e) {
+      throw new BusinessLogicException(ResponseCode.DUPLICATE_DATA.getCode(),
+              ResponseCode.DUPLICATE_DATA.getMessage());
+    }
   }
 
+  @Override
+  public User findOne(String email, String password) {
 
+    User user = userRepository.findByEmail(email);
+
+    if (user == null) {
+      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
+              ResponseCode.DATA_NOT_EXIST.getMessage());
+    }
+
+    return user;
+  }
 }
-

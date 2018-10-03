@@ -5,11 +5,13 @@ import com.enrico.dg.home.security.entity.dao.common.User;
 
 public interface AuthService {
 
-  String createToken(String userId, int userLevel, String currentAccessToken);
+  String createToken(String userId);
 
   JWTokenClaim getTokenInformation (String token);
 
   Boolean isTokenValid(String token);
 
   User register(User user);
+
+  User findOne(String email, String password);
 }

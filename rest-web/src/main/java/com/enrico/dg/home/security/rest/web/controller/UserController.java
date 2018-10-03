@@ -3,7 +3,9 @@ package com.enrico.dg.home.security.rest.web.controller;
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
 import com.enrico.dg.home.security.entity.dao.common.User;
+import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
+import com.enrico.dg.home.security.libraries.utility.PasswordHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.request.UserRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -26,15 +29,38 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping(ApiPath.SIGN_UP)
-    public BaseResponse<UserResponse> create(
+    @PostMapping(ApiPath.ADD_USER)
+    public BaseResponse<UserResponse> addUser(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
             @RequestBody UserRequest userRequest) {
 
-        User user = authService.register(toUser(userRequest));
+        if(authService.isTokenValid(mandatoryRequest.getAccessToken())) {
+
+          User user = authService.register(toUser(userRequest));
+
+          return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+                  null, toUserResponse(user));
+        } else {
+          throw new BusinessLogicException(ResponseCode.INVALID_TOKEN.getCode(),
+                  ResponseCode.INVALID_TOKEN.getMessage());
+        }
+    }
+
+    @PostMapping(ApiPath.SIGN_IN)
+    public BaseResponse<UserResponse> signIn(@RequestParam String email, @RequestParam String password) {
+
+      User user = authService.findOne(email, password);
+
+      if(PasswordHelper.matchPassword(password, user.getPassword())) {
+
+        String token = authService.createToken(user.getId());
 
         return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-                null, toUserResponse(user));
+                null, toUserResponse(user, token));
+      } else {
+        throw new BusinessLogicException(ResponseCode.INVALID_PASSWORD.getCode(),
+                ResponseCode.INVALID_PASSWORD.getMessage());
+      }
     }
 
     private User toUser(UserRequest userRequest) {
@@ -58,5 +84,25 @@ public class UserController {
         userResponse.setPassword(user.getPassword());
 
         return userResponse;
+    }
+
+    private UserResponse toUserResponse(User user, String token) {
+      if(user == null) {
+        return null;
+      }
+
+      UserResponse userResponse = new UserResponse();
+      userResponse.setEmail(user.getEmail());
+      userResponse.setName(user.getName());
+      userResponse.setRole(user.getRole());
+      userResponse.setPassword(user.getPassword());
+      userResponse.setToken(token);
+
+      return userResponse;
+    }
+
+    @ModelAttribute
+    public MandatoryRequest getMandatoryParameter(HttpServletRequest request) {
+      return (MandatoryRequest) request.getAttribute("mandatory");
     }
 }
