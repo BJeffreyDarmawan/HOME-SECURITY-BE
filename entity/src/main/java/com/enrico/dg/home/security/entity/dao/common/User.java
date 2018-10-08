@@ -7,6 +7,7 @@ public class User extends BaseMongo {
     private String password;
     private String role;
     private String imageUrl;
+    private String publicId;
 
     public String getName() {
         return name;
@@ -48,6 +49,14 @@ public class User extends BaseMongo {
         this.imageUrl = imageUrl;
     }
 
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -56,6 +65,7 @@ public class User extends BaseMongo {
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", publicId='" + publicId + '\'' +
                 '}';
     }
 }

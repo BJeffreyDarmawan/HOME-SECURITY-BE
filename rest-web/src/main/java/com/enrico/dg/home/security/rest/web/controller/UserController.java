@@ -61,20 +61,6 @@ public class UserController {
       }
     }
 
-//    @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
-//    public BaseResponse<String> uploadImageToCloudinary(
-//            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-//            @RequestParam(value = "uploadSelfie") MultipartFile aFile
-//    ) {
-//
-//      authService.isTokenValid(mandatoryRequest.getAccessToken());
-//
-//      imageService.uploadImage(aFile);
-//
-//      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-//              null, "Successfully Upload Image");
-//    }
-
     private User toUser(String name, String email, String password, String role) {
         User user = new User();
         user.setPassword(password);
@@ -96,6 +82,7 @@ public class UserController {
         userResponse.setRole(user.getRole());
         userResponse.setPassword(user.getPassword());
         userResponse.setImageUrl(user.getImageUrl());
+        userResponse.setPublicId(user.getPublicId());
 
         return userResponse;
     }

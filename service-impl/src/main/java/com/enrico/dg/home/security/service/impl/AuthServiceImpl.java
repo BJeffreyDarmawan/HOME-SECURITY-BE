@@ -14,6 +14,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
+import java.util.Map;
 
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
@@ -91,12 +92,13 @@ public class AuthServiceImpl implements AuthService {
         newUser.setPassword(PasswordHelper.encryptPassword(user.getPassword()));
     }
 
-    String imageUrl = imageService.uploadImage(aFile);
+    Map<String, String> uploadResponse = imageService.uploadImage(aFile);
 
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
     newUser.setRole(user.getRole());
-    newUser.setImageUrl(imageUrl);
+    newUser.setImageUrl(uploadResponse.get("url"));
+    newUser.setPublicId(uploadResponse.get("public_id"));
 
     try{
       return userRepository.save(newUser);

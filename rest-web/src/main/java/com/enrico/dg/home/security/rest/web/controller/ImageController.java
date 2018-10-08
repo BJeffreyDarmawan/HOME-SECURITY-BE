@@ -1,13 +1,17 @@
 package com.enrico.dg.home.security.rest.web.controller;
 
 import com.enrico.dg.home.security.entity.constant.ApiPath;
+import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
+import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
+import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,24 +24,52 @@ public class ImageController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
   @Autowired
+  private AuthService authService;
+
+  @Autowired
   private ImageService imageService;
 
-  @GetMapping(ApiPath.GET_IMAGE_CLOUDINARY)
+  @GetMapping(ApiPath.GET_IMAGE_CLOUDINARY + ApiPath.ID)
   private BaseResponse<String> getImage(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @PathVariable String id
   ) {
 
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
 
+    String url = imageService.getImage(id);
 
-    return null;
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, url);
   }
 
-  @DeleteMapping(ApiPath.DELETE_IMAGE_CLOUDINARY)
-  private BaseResponse<String> deleteImage() {
+  @DeleteMapping(ApiPath.DELETE_IMAGE_CLOUDINARY + ApiPath.ID)
+  private BaseResponse<String> deleteImage(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @PathVariable String id
+  ) {
 
-    return null;
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    imageService.deleteImage(id);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, "Successfully Delete Image");
   }
+
+//  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
+//  public BaseResponse<String> uploadImageToCloudinary(
+//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+//          @RequestParam(value = "uploadSelfie") MultipartFile aFile
+//  ) {
+//
+//    authService.isTokenValid(mandatoryRequest.getAccessToken());
+//
+//    imageService.uploadImage(aFile);
+//
+//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+//            null, "Successfully Upload Image");
+//  }
 
   @ModelAttribute
   public MandatoryRequest getMandatoryParameter(HttpServletRequest request) {

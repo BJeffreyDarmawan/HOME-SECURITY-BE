@@ -2,11 +2,14 @@ package com.enrico.dg.home.security.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.enrico.dg.home.security.dao.api.UserRepository;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
+import com.enrico.dg.home.security.entity.dao.common.User;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +29,11 @@ public class ImageServiceImpl implements ImageService {
   @Value("${home.security.cloudinary.url}")
   private String CLOUDINARY_URL;
 
+  @Autowired
+  private UserRepository userRepository;
+
   @Override
-  public String uploadImage(MultipartFile aFile) {
+  public Map<String, String> uploadImage(MultipartFile aFile) {
 
     Cloudinary cloudinary = cloudinaryConnect();
 
@@ -41,7 +47,7 @@ public class ImageServiceImpl implements ImageService {
               "public_id", file.getName(),
               "folder", formatter.format(date));
       Map upload = cloudinary.uploader().upload(file, params);
-      return (String) upload.get("url");
+      return upload;
     } catch (IOException e) {
       LOGGER.info(e.getMessage());
       throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
@@ -52,9 +58,28 @@ public class ImageServiceImpl implements ImageService {
   @Override
   public String getImage(String id) {
 
+    User user = userRepository.findByIsDeletedAndId(0, id);
 
+    return user.getImageUrl();
+  }
 
-    return null;
+  @Override
+  public void deleteImage(String id) {
+
+    Cloudinary cloudinary = cloudinaryConnect();
+
+    User user = userRepository.findByIsDeletedAndId(0, id);
+
+    try {
+      cloudinary.uploader().destroy(user.getPublicId(), ObjectUtils.emptyMap());
+      user.setPublicId("");
+      user.setImageUrl("");
+      userRepository.save(user);
+    } catch (IOException e) {
+      LOGGER.info(e.getMessage());
+      throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
+              ResponseCode.SYSTEM_ERROR.getMessage());
+    }
   }
 
   public Cloudinary cloudinaryConnect() {
