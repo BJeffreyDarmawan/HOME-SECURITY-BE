@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 
@@ -74,8 +73,9 @@ public class UserController {
     }
 
     @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
-    public String uploadImageToCloudinary(
-            @RequestParam(value = "Upload Your Selfie", required = true) MultipartFile aFile
+    public BaseResponse<String> uploadImageToCloudinary(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @RequestParam(value = "uploadSelfie") MultipartFile aFile
     ) {
 
       Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -87,10 +87,10 @@ public class UserController {
       Date date = new Date();
 
       try {
-        File file = Files.createTempFile("temp", aFile.getOriginalFilename()).toFile();
+        File file = Files.createTempFile("", aFile.getOriginalFilename()).toFile();
         aFile.transferTo(file);
         Map params = ObjectUtils.asMap(
-                "public_id", aFile.getOriginalFilename(),
+                "public_id", file.getName(),
                 "folder", formatter.format(date));
         Map upload = cloudinary.uploader().upload(file, params);
       } catch (IOException e) {
@@ -99,7 +99,8 @@ public class UserController {
                 ResponseCode.SYSTEM_ERROR.getMessage());
       }
 
-      return "Successfully Uploaded Image";
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, "Successfully Upload Image");
     }
 
     private User toUser(UserRequest userRequest) {
