@@ -14,17 +14,23 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
+
+import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
+
+  @Autowired
+  private ImageService imageService;
 
   @Autowired
   private UserRepository userRepository;
@@ -77,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public User register(User user) {
+  public User register(User user, MultipartFile aFile) {
 
     User newUser = new User();
 
@@ -85,9 +91,12 @@ public class AuthServiceImpl implements AuthService {
         newUser.setPassword(PasswordHelper.encryptPassword(user.getPassword()));
     }
 
+    String imageUrl = imageService.uploadImage(aFile);
+
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
     newUser.setRole(user.getRole());
+    newUser.setImageUrl(imageUrl);
 
     try{
       return userRepository.save(newUser);

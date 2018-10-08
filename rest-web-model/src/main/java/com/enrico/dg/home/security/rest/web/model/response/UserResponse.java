@@ -8,6 +8,7 @@ public class UserResponse extends CommonModel {
     private String email;
     private String password;
     private String role;
+    private String imageUrl;
     private String token;
 
     public String getName() {
@@ -42,6 +43,14 @@ public class UserResponse extends CommonModel {
         this.role = role;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public String getToken() {
         return token;
     }
@@ -57,6 +66,7 @@ public class UserResponse extends CommonModel {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", token='" + token + '\'' +
                 '}';
     }

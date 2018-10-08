@@ -8,8 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(ApiPath.BASE_PATH)
@@ -21,7 +23,12 @@ public class ImageController {
   private ImageService imageService;
 
   @GetMapping(ApiPath.GET_IMAGE_CLOUDINARY)
-  private BaseResponse<String> getImage() {
+  private BaseResponse<String> getImage(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @PathVariable String id
+  ) {
+
+
 
     return null;
   }

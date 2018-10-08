@@ -7,11 +7,9 @@ import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.libraries.utility.PasswordHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
-import com.enrico.dg.home.security.rest.web.model.request.UserRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
 import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
-import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +29,16 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private ImageService imageService;
-
     @PostMapping(ApiPath.ADD_USER)
     public BaseResponse<UserResponse> addUser(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-            @RequestBody UserRequest userRequest
+            @RequestParam String name, @RequestParam String email, @RequestParam String password, @RequestParam String role,
+            @RequestParam(value = "uploadSelfie") MultipartFile aFile
     ) {
 
         authService.isTokenValid(mandatoryRequest.getAccessToken());
 
-        User user = authService.register(toUser(userRequest));
+        User user = authService.register(toUser(name,email,password,role), aFile);
 
         return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
                 null, toUserResponse(user));
@@ -65,26 +61,27 @@ public class UserController {
       }
     }
 
-    @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
-    public BaseResponse<String> uploadImageToCloudinary(
-            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-            @RequestParam(value = "uploadSelfie") MultipartFile aFile
-    ) {
+//    @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
+//    public BaseResponse<String> uploadImageToCloudinary(
+//            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+//            @RequestParam(value = "uploadSelfie") MultipartFile aFile
+//    ) {
+//
+//      authService.isTokenValid(mandatoryRequest.getAccessToken());
+//
+//      imageService.uploadImage(aFile);
+//
+//      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+//              null, "Successfully Upload Image");
+//    }
 
-      authService.isTokenValid(mandatoryRequest.getAccessToken());
-
-      imageService.uploadImage(aFile);
-
-      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-              null, "Successfully Upload Image");
-    }
-
-    private User toUser(UserRequest userRequest) {
+    private User toUser(String name, String email, String password, String role) {
         User user = new User();
-        user.setPassword(userRequest.getPassword());
-        user.setEmail(userRequest.getEmail());
-        user.setName(userRequest.getName());
-        user.setRole(userRequest.getRole());
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setName(name);
+        user.setRole(role);
+
         return user;
     }
 
@@ -98,6 +95,7 @@ public class UserController {
         userResponse.setName(user.getName());
         userResponse.setRole(user.getRole());
         userResponse.setPassword(user.getPassword());
+        userResponse.setImageUrl(user.getImageUrl());
 
         return userResponse;
     }

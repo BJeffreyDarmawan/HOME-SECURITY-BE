@@ -287,6 +287,7 @@
         <version>${maven.source.plugin}</version>
       </plugin>
     </plugins>
+    <finalName>spring-boot</finalName>
   </build>
   <modules>
     <module>rest-web</module>
