@@ -38,6 +38,10 @@
       <groupId>com.enrico.dg</groupId>
       <artifactId>rest-web-model</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http44</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

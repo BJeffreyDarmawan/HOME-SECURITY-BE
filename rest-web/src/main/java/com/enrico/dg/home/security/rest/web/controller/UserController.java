@@ -1,5 +1,7 @@
 package com.enrico.dg.home.security.rest.web.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
 import com.enrico.dg.home.security.entity.dao.common.User;
@@ -15,10 +17,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping(ApiPath.BASE_PATH)
@@ -61,6 +71,35 @@ public class UserController {
         throw new BusinessLogicException(ResponseCode.INVALID_PASSWORD.getCode(),
                 ResponseCode.INVALID_PASSWORD.getMessage());
       }
+    }
+
+    @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
+    public String uploadImageToCloudinary(
+            @RequestParam(value = "Upload Your Selfie", required = true) MultipartFile aFile
+    ) {
+
+      Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+              "cloud_name", "xbcx",
+              "api_key", "535677866642443",
+              "api_secret", "GU_fJ4k09xeYQR87neYNc1GL-bo"));
+
+      SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+      Date date = new Date();
+
+      try {
+        File file = Files.createTempFile("temp", aFile.getOriginalFilename()).toFile();
+        aFile.transferTo(file);
+        Map params = ObjectUtils.asMap(
+                "public_id", aFile.getOriginalFilename(),
+                "folder", formatter.format(date));
+        Map upload = cloudinary.uploader().upload(file, params);
+      } catch (IOException e) {
+        LOGGER.info(e.getMessage());
+        throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
+                ResponseCode.SYSTEM_ERROR.getMessage());
+      }
+
+      return "Successfully Uploaded Image";
     }
 
     private User toUser(UserRequest userRequest) {
