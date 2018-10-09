@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,9 +31,6 @@ public class AuthServiceImpl implements AuthService {
 
   @Value("${home.security.auth.secret}")
   private String TOKEN_SECRET;
-
-  @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
   public String createToken(String userId) {
