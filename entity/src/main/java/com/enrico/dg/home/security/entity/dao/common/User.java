@@ -1,11 +1,16 @@
 package com.enrico.dg.home.security.entity.dao.common;
 
+import net.karneim.pojobuilder.GeneratePojoBuilder;
+
+@GeneratePojoBuilder
 public class User extends BaseMongo {
 
     private String name;
     private String email;
     private String password;
     private String role;
+    private String imageUrl;
+    private String publicId;
 
     public String getName() {
         return name;
@@ -39,6 +44,22 @@ public class User extends BaseMongo {
         this.role = role;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -46,6 +67,8 @@ public class User extends BaseMongo {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publicId='" + publicId + '\'' +
                 '}';
     }
 }

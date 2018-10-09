@@ -36,5 +36,9 @@
       <groupId>com.enrico.dg</groupId>
       <artifactId>dao</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http44</artifactId>
+    </dependency>
   </dependencies>
 </project>

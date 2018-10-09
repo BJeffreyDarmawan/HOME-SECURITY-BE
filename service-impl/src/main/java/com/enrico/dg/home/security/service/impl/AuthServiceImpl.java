@@ -14,6 +14,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public User findOne(String email, String password) {
+  public User login(String email) {
 
     User user = userRepository.findByEmail(email);
 
@@ -109,4 +110,19 @@ public class AuthServiceImpl implements AuthService {
 
     return user;
   }
+
+  @Override
+  public User findOne(String id) {
+
+    User user = userRepository.findByIsDeletedAndId(0, id);
+
+    if (user == null) {
+      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
+              ResponseCode.DATA_NOT_EXIST.getMessage());
+    }
+
+    return user;
+  }
+
+
 }

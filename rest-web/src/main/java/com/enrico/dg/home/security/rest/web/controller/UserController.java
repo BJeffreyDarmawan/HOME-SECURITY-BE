@@ -6,6 +6,7 @@ import com.enrico.dg.home.security.entity.dao.common.User;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.libraries.utility.PasswordHelper;
+import com.enrico.dg.home.security.rest.web.model.request.LoginRequest;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.request.UserRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
@@ -29,29 +30,26 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @PostMapping(ApiPath.ADD_USER)
+    @PostMapping(value = ApiPath.ADD_USER)
     public BaseResponse<UserResponse> addUser(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-            @RequestBody UserRequest userRequest) {
+            @RequestBody UserRequest userRequest
+    ) {
 
-        if(authService.isTokenValid(mandatoryRequest.getAccessToken())) {
+        authService.isTokenValid(mandatoryRequest.getAccessToken());
 
-          User user = authService.register(toUser(userRequest));
+        User user = authService.register(toUser(userRequest));
 
-          return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-                  null, toUserResponse(user));
-        } else {
-          throw new BusinessLogicException(ResponseCode.INVALID_TOKEN.getCode(),
-                  ResponseCode.INVALID_TOKEN.getMessage());
-        }
+        return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+                null, toUserResponse(user));
     }
 
     @PostMapping(ApiPath.SIGN_IN)
-    public BaseResponse<UserResponse> signIn(@RequestParam String email, @RequestParam String password) {
+    public BaseResponse<UserResponse> signIn(@RequestBody LoginRequest loginRequest) {
 
-      User user = authService.findOne(email, password);
+      User user = authService.login(loginRequest.getEmail());
 
-      if(PasswordHelper.matchPassword(password, user.getPassword())) {
+      if(PasswordHelper.matchPassword(loginRequest.getPassword(), user.getPassword())) {
 
         String token = authService.createToken(user.getId());
 
@@ -63,12 +61,22 @@ public class UserController {
       }
     }
 
+    @GetMapping(ApiPath.ID)
+    public BaseResponse<UserResponse> getUser(@PathVariable String id) {
+
+      User user = authService.findOne(id);
+
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, toUserResponse(user));
+    }
+
     private User toUser(UserRequest userRequest) {
         User user = new User();
         user.setPassword(userRequest.getPassword());
         user.setEmail(userRequest.getEmail());
         user.setName(userRequest.getName());
         user.setRole(userRequest.getRole());
+
         return user;
     }
 
@@ -82,6 +90,9 @@ public class UserController {
         userResponse.setName(user.getName());
         userResponse.setRole(user.getRole());
         userResponse.setPassword(user.getPassword());
+        userResponse.setImageUrl(user.getImageUrl());
+        userResponse.setPublicId(user.getPublicId());
+        userResponse.setId(user.getId());
 
         return userResponse;
     }
@@ -97,6 +108,7 @@ public class UserController {
       userResponse.setRole(user.getRole());
       userResponse.setPassword(user.getPassword());
       userResponse.setToken(token);
+      userResponse.setId(user.getId());
 
       return userResponse;
     }
