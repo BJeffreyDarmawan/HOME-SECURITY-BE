@@ -4,6 +4,7 @@ import com.enrico.dg.home.security.entity.CommonModel;
 
 public class UserResponse extends CommonModel {
 
+    private String id;
     private String name;
     private String email;
     private String password;
@@ -11,6 +12,14 @@ public class UserResponse extends CommonModel {
     private String imageUrl;
     private String publicId;
     private String token;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -71,7 +80,8 @@ public class UserResponse extends CommonModel {
     @Override
     public String toString() {
         return "UserResponse{" +
-                "name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +

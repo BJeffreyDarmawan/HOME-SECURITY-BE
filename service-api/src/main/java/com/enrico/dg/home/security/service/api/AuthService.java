@@ -12,7 +12,9 @@ public interface AuthService {
 
   Boolean isTokenValid(String token);
 
-  User register(User user, MultipartFile aFile);
+  User register(User user);
 
-  User findOne(String email, String password);
+  User login(String email);
+
+  User findOne(String id);
 }

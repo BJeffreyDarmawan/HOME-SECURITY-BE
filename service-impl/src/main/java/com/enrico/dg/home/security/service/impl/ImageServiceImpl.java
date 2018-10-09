@@ -33,7 +33,7 @@ public class ImageServiceImpl implements ImageService {
   private UserRepository userRepository;
 
   @Override
-  public Map<String, String> uploadImage(MultipartFile aFile) {
+  public Map<String, String> uploadImage(MultipartFile aFile, String id) {
 
     Cloudinary cloudinary = cloudinaryConnect();
 
@@ -41,12 +41,19 @@ public class ImageServiceImpl implements ImageService {
     Date date = new Date();
 
     try {
+      User user = userRepository.findByIsDeletedAndId(0, id);
+
       File file = Files.createTempFile("", aFile.getOriginalFilename()).toFile();
       aFile.transferTo(file);
       Map params = ObjectUtils.asMap(
               "public_id", file.getName(),
               "folder", formatter.format(date));
       Map upload = cloudinary.uploader().upload(file, params);
+
+      user.setImageUrl((String) upload.get("url"));
+      user.setPublicId((String) upload.get("public_id"));
+      userRepository.save(user);
+
       return upload;
     } catch (IOException e) {
       LOGGER.info(e.getMessage());
@@ -58,9 +65,15 @@ public class ImageServiceImpl implements ImageService {
   @Override
   public String getImage(String id) {
 
-    User user = userRepository.findByIsDeletedAndId(0, id);
+    try{
+      User user = userRepository.findByIsDeletedAndId(0, id);
 
-    return user.getImageUrl();
+      return user.getImageUrl();
+    } catch (Exception e) {
+      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
+              ResponseCode.DATA_NOT_EXIST.getMessage());
+    }
+
   }
 
   @Override
@@ -68,9 +81,9 @@ public class ImageServiceImpl implements ImageService {
 
     Cloudinary cloudinary = cloudinaryConnect();
 
-    User user = userRepository.findByIsDeletedAndId(0, id);
-
     try {
+      User user = userRepository.findByIsDeletedAndId(0, id);
+
       cloudinary.uploader().destroy(user.getPublicId(), ObjectUtils.emptyMap());
       user.setPublicId("");
       user.setImageUrl("");

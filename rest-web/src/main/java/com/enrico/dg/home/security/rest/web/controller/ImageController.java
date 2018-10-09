@@ -16,6 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping(ApiPath.BASE_PATH)
@@ -57,19 +58,20 @@ public class ImageController {
             null, "Successfully Delete Image");
   }
 
-//  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
-//  public BaseResponse<String> uploadImageToCloudinary(
-//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-//          @RequestParam(value = "uploadSelfie") MultipartFile aFile
-//  ) {
-//
-//    authService.isTokenValid(mandatoryRequest.getAccessToken());
-//
-//    imageService.uploadImage(aFile);
-//
-//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-//            null, "Successfully Upload Image");
-//  }
+  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY + ApiPath.ID)
+  public BaseResponse<Map<String, String>> uploadImageToCloudinary(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @RequestParam(value = "uploadSelfie") MultipartFile aFile,
+          @PathVariable String id
+  ) {
+
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    Map<String, String> uploadResult = imageService.uploadImage(aFile, id);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, uploadResult);
+  }
 
   @ModelAttribute
   public MandatoryRequest getMandatoryParameter(HttpServletRequest request) {

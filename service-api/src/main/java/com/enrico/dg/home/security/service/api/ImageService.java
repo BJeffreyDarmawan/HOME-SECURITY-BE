@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface ImageService {
 
-  Map<String, String> uploadImage(MultipartFile aFile);
+  Map<String, String> uploadImage(MultipartFile aFile, String id);
   String getImage(String id);
   void deleteImage(String id);
 }
