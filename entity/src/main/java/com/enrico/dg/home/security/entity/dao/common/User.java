@@ -11,6 +11,7 @@ public class User extends BaseMongo {
     private String role;
     private String imageUrl;
     private String publicId;
+    private String macAddress;
 
     public String getName() {
         return name;
@@ -60,6 +61,14 @@ public class User extends BaseMongo {
         this.publicId = publicId;
     }
 
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -69,6 +78,7 @@ public class User extends BaseMongo {
                 ", role='" + role + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", publicId='" + publicId + '\'' +
+                ", macAddress='" + macAddress + '\'' +
                 '}';
     }
 }

@@ -2,7 +2,6 @@ package com.enrico.dg.home.security.service.api;
 
 import com.enrico.dg.home.security.entity.JWTokenClaim;
 import com.enrico.dg.home.security.entity.dao.common.User;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface AuthService {
 
@@ -15,6 +14,4 @@ public interface AuthService {
   User register(User user);
 
   User login(String email);
-
-  User findOne(String id);
 }

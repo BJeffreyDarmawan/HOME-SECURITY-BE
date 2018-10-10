@@ -8,6 +8,7 @@ public class UserRequest extends CommonModel {
     private String email;
     private String password;
     private String role;
+    private String macAddress;
 
     public String getName() {
         return name;
@@ -41,6 +42,14 @@ public class UserRequest extends CommonModel {
         this.role = role;
     }
 
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
     @Override
     public String toString() {
         return "UserRequest{" +
@@ -48,6 +57,7 @@ public class UserRequest extends CommonModel {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", macAddress='" + macAddress + '\'' +
                 '}';
     }
 }
