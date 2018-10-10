@@ -15,11 +15,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 
+import com.enrico.dg.home.security.service.api.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,13 +28,13 @@ public class AuthServiceImpl implements AuthService {
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthServiceImpl.class);
 
   @Autowired
+  private CacheService cacheService;
+
+  @Autowired
   private UserRepository userRepository;
 
   @Value("${home.security.auth.secret}")
   private String TOKEN_SECRET;
-
-  @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @Override
   public String createToken(String userId) {
@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
       return JWT.create()
           .withClaim("userId", userId)
           .withClaim("createdAt", currentDate)
-          .withExpiresAt(new Date(currentDate.getTime() + 3600000))
+          .withExpiresAt(new Date(currentDate.getTime() + 86400000))
           .sign(algorithm);
     } catch (Exception exception) {
       LOGGER.error(exception.getMessage());
@@ -74,6 +74,10 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public Boolean isTokenValid(String token) {
     JWTokenClaim jwTokenClaim = this.getTokenInformation(token);
+    if(token.equals(cacheService.findCacheByKey(jwTokenClaim.getUserId(), String.class))) {
+      throw new BusinessLogicException(ResponseCode.INVALID_TOKEN.getCode(),
+              ResponseCode.INVALID_TOKEN.getMessage());
+    }
     return jwTokenClaim != null;
   }
 
