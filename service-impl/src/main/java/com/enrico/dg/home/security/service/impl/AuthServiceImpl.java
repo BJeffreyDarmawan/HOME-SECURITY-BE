@@ -93,6 +93,7 @@ public class AuthServiceImpl implements AuthService {
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
     newUser.setRole(user.getRole());
+    newUser.setMacAddress(user.getMacAddress());
 
     try{
       return userRepository.save(newUser);
@@ -114,19 +115,4 @@ public class AuthServiceImpl implements AuthService {
 
     return user;
   }
-
-  @Override
-  public User findOne(String id) {
-
-    User user = userRepository.findByIsDeletedAndId(0, id);
-
-    if (user == null) {
-      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
-              ResponseCode.DATA_NOT_EXIST.getMessage());
-    }
-
-    return user;
-  }
-
-
 }

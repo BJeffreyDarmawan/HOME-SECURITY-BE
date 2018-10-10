@@ -11,6 +11,7 @@ public class UserResponse extends CommonModel {
     private String role;
     private String imageUrl;
     private String publicId;
+    private String macAddress;
     private String token;
 
     public String getId() {
@@ -77,6 +78,14 @@ public class UserResponse extends CommonModel {
         this.token = token;
     }
 
+    public String getMacAddress() {
+        return macAddress;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
     @Override
     public String toString() {
         return "UserResponse{" +
@@ -87,6 +96,7 @@ public class UserResponse extends CommonModel {
                 ", role='" + role + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", publicId='" + publicId + '\'' +
+                ", macAddress='" + macAddress + '\'' +
                 ", token='" + token + '\'' +
                 '}';
     }

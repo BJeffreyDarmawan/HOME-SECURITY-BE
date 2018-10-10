@@ -13,6 +13,7 @@ import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
 import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.CacheService;
+import com.enrico.dg.home.security.service.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(ApiPath.BASE_PATH)
@@ -30,6 +33,9 @@ public class UserController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CacheService cacheService;
@@ -68,7 +74,7 @@ public class UserController {
     @GetMapping(ApiPath.ID)
     public BaseResponse<UserResponse> getUser(@PathVariable String id) {
 
-      User user = authService.findOne(id);
+      User user = userService.findOne(id);
 
       return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
               null, toUserResponse(user));
@@ -88,12 +94,26 @@ public class UserController {
               null, "Logout Successful");
     }
 
+    @GetMapping
+    public BaseResponse<List<UserResponse>> findAll(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+      List<User> userList = userService.findAll();
+
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, toUserResponseList(userList));
+    }
+
     private User toUser(UserRequest userRequest) {
         User user = new User();
         user.setPassword(userRequest.getPassword());
         user.setEmail(userRequest.getEmail());
         user.setName(userRequest.getName());
         user.setRole(userRequest.getRole());
+        user.setMacAddress(userRequest.getMacAddress());
 
         return user;
     }
@@ -111,6 +131,7 @@ public class UserController {
         userResponse.setImageUrl(user.getImageUrl());
         userResponse.setPublicId(user.getPublicId());
         userResponse.setId(user.getId());
+        userResponse.setMacAddress(user.getMacAddress());
 
         return userResponse;
     }
@@ -127,8 +148,19 @@ public class UserController {
       userResponse.setPassword(user.getPassword());
       userResponse.setToken(token);
       userResponse.setId(user.getId());
+      userResponse.setMacAddress(user.getMacAddress());
 
       return userResponse;
+    }
+
+    private List<UserResponse> toUserResponseList(List<User> userList) {
+      List<UserResponse> userResponseList = new ArrayList<>();
+
+      for(User user : userList) {
+        userResponseList.add(toUserResponse(user));
+      }
+
+      return userResponseList;
     }
 
     @ModelAttribute
