@@ -12,6 +12,7 @@ import com.enrico.dg.home.security.rest.web.model.request.UserRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
 import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
+import com.enrico.dg.home.security.service.api.CacheService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class UserController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private CacheService cacheService;
 
     @PostMapping(value = ApiPath.ADD_USER)
     public BaseResponse<UserResponse> addUser(
@@ -68,6 +72,20 @@ public class UserController {
 
       return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
               null, toUserResponse(user));
+    }
+
+    @GetMapping(ApiPath.LOGOUT + ApiPath.ID)
+    public BaseResponse<String> logout(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @PathVariable String id
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+      this.cacheService.createCache(id, mandatoryRequest.getAccessToken(), 86400);
+
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, "Logout Successful");
     }
 
     private User toUser(UserRequest userRequest) {
