@@ -83,7 +83,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-mockito-common:1.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.powermock:powermock-api-support:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.auth0:java-jwt:3.2.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.8" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.6" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.55" level="project" />
