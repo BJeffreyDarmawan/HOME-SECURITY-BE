@@ -48,7 +48,7 @@ public class UserController {
 
         authService.isTokenValid(mandatoryRequest.getAccessToken());
 
-        User user = authService.register(toUser(userRequest));
+        User user = userService.register(toUser(userRequest));
 
         return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
                 null, toUserResponse(user));
@@ -57,7 +57,7 @@ public class UserController {
     @PostMapping(ApiPath.SIGN_IN)
     public BaseResponse<UserResponse> signIn(@RequestBody LoginRequest loginRequest) {
 
-      User user = authService.login(loginRequest.getEmail());
+      User user = userService.login(loginRequest.getEmail());
 
       if(PasswordHelper.matchPassword(loginRequest.getPassword(), user.getPassword())) {
 
@@ -114,6 +114,8 @@ public class UserController {
         user.setName(userRequest.getName());
         user.setRole(userRequest.getRole());
         user.setMacAddress(userRequest.getMacAddress());
+        user.setSosNumber(userRequest.getSosNumber());
+        user.setEmergencyNumber(userRequest.getEmergencyNumber());
 
         return user;
     }
@@ -128,10 +130,10 @@ public class UserController {
         userResponse.setName(user.getName());
         userResponse.setRole(user.getRole());
         userResponse.setPassword(user.getPassword());
-        userResponse.setImageUrl(user.getImageUrl());
-        userResponse.setPublicId(user.getPublicId());
         userResponse.setId(user.getId());
         userResponse.setMacAddress(user.getMacAddress());
+        userResponse.setSosNumber(user.getSosNumber());
+        userResponse.setEmergencyNumber(user.getEmergencyNumber());
 
         return userResponse;
     }
@@ -149,6 +151,8 @@ public class UserController {
       userResponse.setToken(token);
       userResponse.setId(user.getId());
       userResponse.setMacAddress(user.getMacAddress());
+      userResponse.setSosNumber(user.getSosNumber());
+      userResponse.setEmergencyNumber(user.getEmergencyNumber());
 
       return userResponse;
     }

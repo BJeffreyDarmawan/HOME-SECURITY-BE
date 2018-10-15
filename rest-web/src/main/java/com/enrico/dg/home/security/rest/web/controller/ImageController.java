@@ -58,16 +58,12 @@ public class ImageController {
             null, "Successfully Delete Image");
   }
 
-  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY + ApiPath.ID)
+  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
   public BaseResponse<Map<String, String>> uploadImageToCloudinary(
-          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-          @RequestParam(value = "uploadSelfie") MultipartFile aFile,
-          @PathVariable String id
+          @RequestParam(value = "uploadSelfie") MultipartFile aFile
   ) {
 
-    authService.isTokenValid(mandatoryRequest.getAccessToken());
-
-    Map<String, String> uploadResult = imageService.uploadImage(aFile, id);
+    Map<String, String> uploadResult = imageService.uploadImage(aFile);
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
             null, uploadResult);

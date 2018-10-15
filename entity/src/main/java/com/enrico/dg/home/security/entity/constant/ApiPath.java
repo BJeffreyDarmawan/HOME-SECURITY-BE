@@ -10,4 +10,5 @@ public interface ApiPath {
   String GET_IMAGE_CLOUDINARY = "/get-image-cloudinary";
   String DELETE_IMAGE_CLOUDINARY = "/delete-image-cloudinary";
   String LOGOUT = "/logout";
+  String DEVELOPER = "/developer";
 }

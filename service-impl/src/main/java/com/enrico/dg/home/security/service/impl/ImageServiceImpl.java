@@ -2,9 +2,10 @@ package com.enrico.dg.home.security.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.enrico.dg.home.security.dao.api.UserRepository;
+import com.enrico.dg.home.security.dao.api.ImageRepository;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
-import com.enrico.dg.home.security.entity.dao.common.User;
+import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
+import com.enrico.dg.home.security.entity.dao.common.CloudinaryImageBuilder;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
@@ -30,10 +31,10 @@ public class ImageServiceImpl implements ImageService {
   private String CLOUDINARY_URL;
 
   @Autowired
-  private UserRepository userRepository;
+  private ImageRepository imageRepository;
 
   @Override
-  public Map<String, String> uploadImage(MultipartFile aFile, String id) {
+  public Map<String, String> uploadImage(MultipartFile aFile) {
 
     Cloudinary cloudinary = cloudinaryConnect();
 
@@ -41,8 +42,6 @@ public class ImageServiceImpl implements ImageService {
     Date date = new Date();
 
     try {
-      User user = userRepository.findByIsDeletedAndId(0, id);
-
       File file = Files.createTempFile("", aFile.getOriginalFilename()).toFile();
       aFile.transferTo(file);
       Map params = ObjectUtils.asMap(
@@ -50,9 +49,12 @@ public class ImageServiceImpl implements ImageService {
               "folder", formatter.format(date));
       Map upload = cloudinary.uploader().upload(file, params);
 
-      user.setImageUrl((String) upload.get("url"));
-      user.setPublicId((String) upload.get("public_id"));
-      userRepository.save(user);
+      CloudinaryImage cloudinaryImage = new CloudinaryImageBuilder()
+              .withImageUrl((String) upload.get("url"))
+              .withPublicId((String) upload.get("public_id"))
+              .build();
+
+      imageRepository.save(cloudinaryImage);
 
       return upload;
     } catch (IOException e) {
@@ -64,11 +66,11 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public String getImage(String id) {
-
+    //to be modified to findAll by CreatedAt date
     try{
-      User user = userRepository.findByIsDeletedAndId(0, id);
+      CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
 
-      return user.getImageUrl();
+      return cloudinaryImage.getImageUrl();
     } catch (Exception e) {
       throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
               ResponseCode.DATA_NOT_EXIST.getMessage());
@@ -82,12 +84,11 @@ public class ImageServiceImpl implements ImageService {
     Cloudinary cloudinary = cloudinaryConnect();
 
     try {
-      User user = userRepository.findByIsDeletedAndId(0, id);
+      CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
 
-      cloudinary.uploader().destroy(user.getPublicId(), ObjectUtils.emptyMap());
-      user.setPublicId("");
-      user.setImageUrl("");
-      userRepository.save(user);
+      cloudinary.uploader().destroy(cloudinaryImage.getPublicId(), ObjectUtils.emptyMap());
+
+      imageRepository.delete(cloudinaryImage);
     } catch (IOException e) {
       LOGGER.info(e.getMessage());
       throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),

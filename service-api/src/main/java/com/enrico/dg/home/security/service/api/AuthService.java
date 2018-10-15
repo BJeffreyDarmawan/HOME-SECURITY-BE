@@ -10,8 +10,4 @@ public interface AuthService {
   JWTokenClaim getTokenInformation (String token);
 
   Boolean isTokenValid(String token);
-
-  User register(User user);
-
-  User login(String email);
 }
