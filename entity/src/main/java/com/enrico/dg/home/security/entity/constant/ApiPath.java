@@ -6,10 +6,10 @@ public interface ApiPath {
   String ID = "/{id}";
   String ADD_USER = "/add-user";
   String SIGN_IN = "/sign-in";
-  String UPLOAD_IMAGE_CLOUDINARY = "/upload-image-cloudinary";
-  String GET_IMAGE_CLOUDINARY = "/get-image-cloudinary";
-  String DELETE_IMAGE_CLOUDINARY = "/delete-image-cloudinary";
   String LOGOUT = "/logout";
   String DEVELOPER = "/developer";
   String USER = "/user";
+  String IMAGE = "/image";
+  String SECURITY_SYSTEM = "/security-system";
+  String INITIALIZE_SECURITY_SYSTEM = "/initialize-security-system";
 }

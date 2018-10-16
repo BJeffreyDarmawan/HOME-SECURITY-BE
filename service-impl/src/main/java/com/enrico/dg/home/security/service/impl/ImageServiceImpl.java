@@ -58,6 +58,8 @@ public class ImageServiceImpl implements ImageService {
 
       imageRepository.save(cloudinaryImage);
 
+      upload.put("notification", "There are some activities at your house. Please check the attached picture.");
+
       return upload;
     } catch (IOException e) {
       LOGGER.info(e.getMessage());

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(ApiPath.BASE_PATH)
+@RequestMapping(ApiPath.BASE_PATH + ApiPath.IMAGE)
 public class ImageController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
@@ -35,7 +35,7 @@ public class ImageController {
   @Autowired
   private ImageService imageService;
 
-  @GetMapping(ApiPath.GET_IMAGE_CLOUDINARY)
+  @GetMapping
   private BaseResponse<List<String>> getImage(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
@@ -63,9 +63,9 @@ public class ImageController {
 //            null, "Successfully Delete Image");
 //  }
 
-  @PostMapping(ApiPath.UPLOAD_IMAGE_CLOUDINARY)
+  @PostMapping
   public BaseResponse<Map<String, String>> uploadImageToCloudinary(
-          @RequestParam(value = "uploadSelfie") MultipartFile aFile
+          @RequestParam(value = "capturedImage") MultipartFile aFile
   ) {
 
     Map<String, String> uploadResult = imageService.uploadImage(aFile);

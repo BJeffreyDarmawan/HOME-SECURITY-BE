@@ -41,7 +41,7 @@ public class UserController {
     @Autowired
     private CacheService cacheService;
 
-    @PostMapping(value = ApiPath.ADD_USER)
+    @PostMapping(ApiPath.ADD_USER)
     public BaseResponse<UserResponse> addUser(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
             @RequestBody UserRequest userRequest
