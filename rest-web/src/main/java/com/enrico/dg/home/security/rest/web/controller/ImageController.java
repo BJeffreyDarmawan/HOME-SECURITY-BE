@@ -2,6 +2,7 @@ package com.enrico.dg.home.security.rest.web.controller;
 
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
+import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
@@ -36,17 +37,17 @@ public class ImageController {
   private ImageService imageService;
 
   @GetMapping
-  private BaseResponse<List<String>> getImage(
+  private BaseResponse<List<CloudinaryImage>> getImage(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
   ) {
 
     authService.isTokenValid(mandatoryRequest.getAccessToken());
 
-    List<String> url = imageService.getImages(date);
+    List<CloudinaryImage> cloudinaryImageList = imageService.getImages(date);
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-            null, url);
+            null, cloudinaryImageList);
   }
 
 //  @DeleteMapping(ApiPath.DELETE_IMAGE_CLOUDINARY + ApiPath.ID)

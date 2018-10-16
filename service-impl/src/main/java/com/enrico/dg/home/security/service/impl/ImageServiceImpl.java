@@ -69,17 +69,12 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public List<String> getImages(Date date) {
+  public List<CloudinaryImage> getImages(Date date) {
 
     try{
       List<CloudinaryImage> cloudinaryImages = imageRepository.findAllByCreatedDateAfter(date);
-      List<String> imageUrls = new ArrayList<>();
 
-      for(CloudinaryImage cloudinaryImage : cloudinaryImages) {
-        imageUrls.add(cloudinaryImage.getImageUrl());
-      }
-
-      return imageUrls;
+      return cloudinaryImages;
     } catch (Exception e) {
       throw new BusinessLogicException(ResponseCode.RUNTIME_ERROR.getCode(),
               ResponseCode.RUNTIME_ERROR.getMessage());
