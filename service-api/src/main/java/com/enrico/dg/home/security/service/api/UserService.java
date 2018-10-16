@@ -9,4 +9,10 @@ public interface UserService {
   User findOne(String id);
 
   List<User> findAll();
+
+  User register(User user);
+
+  User login(String email);
+
+  User update(String id, User user);
 }

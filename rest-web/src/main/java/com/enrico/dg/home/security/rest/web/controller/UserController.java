@@ -14,6 +14,7 @@ import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.CacheService;
 import com.enrico.dg.home.security.service.api.UserService;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiPath.BASE_PATH)
+@RequestMapping(ApiPath.BASE_PATH + ApiPath.USER)
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -40,7 +41,7 @@ public class UserController {
     @Autowired
     private CacheService cacheService;
 
-    @PostMapping(value = ApiPath.ADD_USER)
+    @PostMapping(ApiPath.ADD_USER)
     public BaseResponse<UserResponse> addUser(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
             @RequestBody UserRequest userRequest
@@ -48,7 +49,7 @@ public class UserController {
 
         authService.isTokenValid(mandatoryRequest.getAccessToken());
 
-        User user = authService.register(toUser(userRequest));
+        User user = userService.register(toUser(userRequest));
 
         return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
                 null, toUserResponse(user));
@@ -57,7 +58,7 @@ public class UserController {
     @PostMapping(ApiPath.SIGN_IN)
     public BaseResponse<UserResponse> signIn(@RequestBody LoginRequest loginRequest) {
 
-      User user = authService.login(loginRequest.getEmail());
+      User user = userService.login(loginRequest.getEmail());
 
       if(PasswordHelper.matchPassword(loginRequest.getPassword(), user.getPassword())) {
 
@@ -72,7 +73,12 @@ public class UserController {
     }
 
     @GetMapping(ApiPath.ID)
-    public BaseResponse<UserResponse> getUser(@PathVariable String id) {
+    public BaseResponse<UserResponse> getUser(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @PathVariable String id
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
 
       User user = userService.findOne(id);
 
@@ -107,6 +113,21 @@ public class UserController {
               null, toUserResponseList(userList));
     }
 
+    @PutMapping(ApiPath.ID)
+    public BaseResponse<UserResponse> update(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @ApiParam(value = "macAddress, sosNumber, emergencyNumber") @RequestBody UserRequest userRequest,
+            @PathVariable String id
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+      User user = userService.update(id, toUser(userRequest));
+
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, toUserResponse(user));
+    }
+
     private User toUser(UserRequest userRequest) {
         User user = new User();
         user.setPassword(userRequest.getPassword());
@@ -114,6 +135,8 @@ public class UserController {
         user.setName(userRequest.getName());
         user.setRole(userRequest.getRole());
         user.setMacAddress(userRequest.getMacAddress());
+        user.setSosNumber(userRequest.getSosNumber());
+        user.setEmergencyNumber(userRequest.getEmergencyNumber());
 
         return user;
     }
@@ -128,10 +151,10 @@ public class UserController {
         userResponse.setName(user.getName());
         userResponse.setRole(user.getRole());
         userResponse.setPassword(user.getPassword());
-        userResponse.setImageUrl(user.getImageUrl());
-        userResponse.setPublicId(user.getPublicId());
         userResponse.setId(user.getId());
         userResponse.setMacAddress(user.getMacAddress());
+        userResponse.setSosNumber(user.getSosNumber());
+        userResponse.setEmergencyNumber(user.getEmergencyNumber());
 
         return userResponse;
     }
@@ -149,6 +172,8 @@ public class UserController {
       userResponse.setToken(token);
       userResponse.setId(user.getId());
       userResponse.setMacAddress(user.getMacAddress());
+      userResponse.setSosNumber(user.getSosNumber());
+      userResponse.setEmergencyNumber(user.getEmergencyNumber());
 
       return userResponse;
     }

@@ -1,9 +1,6 @@
 package com.enrico.dg.home.security.service.impl;
 
-import com.enrico.dg.home.security.dao.api.UserRepository;
 import com.enrico.dg.home.security.entity.JWTokenClaimBuilder;
-import com.enrico.dg.home.security.entity.dao.common.User;
-import com.enrico.dg.home.security.libraries.utility.PasswordHelper;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.entity.JWTokenClaim;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
@@ -29,9 +26,6 @@ public class AuthServiceImpl implements AuthService {
 
   @Autowired
   private CacheService cacheService;
-
-  @Autowired
-  private UserRepository userRepository;
 
   @Value("${home.security.auth.secret}")
   private String TOKEN_SECRET;
@@ -79,40 +73,5 @@ public class AuthServiceImpl implements AuthService {
               ResponseCode.INVALID_TOKEN.getMessage());
     }
     return jwTokenClaim != null;
-  }
-
-  @Override
-  public User register(User user) {
-
-    User newUser = new User();
-
-    if(PasswordHelper.isPasswordValid(user.getPassword())) {
-        newUser.setPassword(PasswordHelper.encryptPassword(user.getPassword()));
-    }
-
-    newUser.setName(user.getName());
-    newUser.setEmail(user.getEmail());
-    newUser.setRole(user.getRole());
-    newUser.setMacAddress(user.getMacAddress());
-
-    try{
-      return userRepository.save(newUser);
-    } catch (Exception e) {
-      throw new BusinessLogicException(ResponseCode.DUPLICATE_DATA.getCode(),
-              ResponseCode.DUPLICATE_DATA.getMessage());
-    }
-  }
-
-  @Override
-  public User login(String email) {
-
-    User user = userRepository.findByEmail(email);
-
-    if (user == null) {
-      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
-              ResponseCode.DATA_NOT_EXIST.getMessage());
-    }
-
-    return user;
   }
 }
