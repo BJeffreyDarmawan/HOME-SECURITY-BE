@@ -11,4 +11,5 @@ public interface ApiPath {
   String DELETE_IMAGE_CLOUDINARY = "/delete-image-cloudinary";
   String LOGOUT = "/logout";
   String DEVELOPER = "/developer";
+  String USER = "/user";
 }

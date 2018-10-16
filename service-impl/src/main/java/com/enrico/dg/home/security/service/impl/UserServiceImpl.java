@@ -83,4 +83,21 @@ public class UserServiceImpl implements UserService {
 
     return user;
   }
+
+  @Override
+  public User update(String id, User user) {
+
+    User newUser = userRepository.findByIsDeletedAndId(0, id);
+
+    if (newUser == null) {
+      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
+              ResponseCode.DATA_NOT_EXIST.getMessage());
+    }
+
+    newUser.setMacAddress(user.getMacAddress());
+    newUser.setSosNumber(user.getSosNumber());
+    newUser.setEmergencyNumber(user.getEmergencyNumber());
+
+    return userRepository.save(newUser);
+  }
 }

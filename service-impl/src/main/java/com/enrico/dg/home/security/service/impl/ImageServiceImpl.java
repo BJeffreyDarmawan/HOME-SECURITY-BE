@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -65,36 +67,40 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
-  public String getImage(String id) {
-    //to be modified to findAll by CreatedAt date
+  public List<String> getImages(Date date) {
+
     try{
-      CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
+      List<CloudinaryImage> cloudinaryImages = imageRepository.findAllByCreatedDateAfter(date);
+      List<String> imageUrls = new ArrayList<>();
 
-      return cloudinaryImage.getImageUrl();
+      for(CloudinaryImage cloudinaryImage : cloudinaryImages) {
+        imageUrls.add(cloudinaryImage.getImageUrl());
+      }
+
+      return imageUrls;
     } catch (Exception e) {
-      throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
-              ResponseCode.DATA_NOT_EXIST.getMessage());
-    }
-
-  }
-
-  @Override
-  public void deleteImage(String id) {
-
-    Cloudinary cloudinary = cloudinaryConnect();
-
-    try {
-      CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
-
-      cloudinary.uploader().destroy(cloudinaryImage.getPublicId(), ObjectUtils.emptyMap());
-
-      imageRepository.delete(cloudinaryImage);
-    } catch (IOException e) {
-      LOGGER.info(e.getMessage());
-      throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
-              ResponseCode.SYSTEM_ERROR.getMessage());
+      throw new BusinessLogicException(ResponseCode.RUNTIME_ERROR.getCode(),
+              ResponseCode.RUNTIME_ERROR.getMessage());
     }
   }
+
+//  @Override
+//  public void deleteImage(String id) {
+//
+//    Cloudinary cloudinary = cloudinaryConnect();
+//
+//    try {
+//      CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
+//
+//      cloudinary.uploader().destroy(cloudinaryImage.getPublicId(), ObjectUtils.emptyMap());
+//
+//      imageRepository.delete(cloudinaryImage);
+//    } catch (IOException e) {
+//      LOGGER.info(e.getMessage());
+//      throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
+//              ResponseCode.SYSTEM_ERROR.getMessage());
+//    }
+//  }
 
   public Cloudinary cloudinaryConnect() {
 //    Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(

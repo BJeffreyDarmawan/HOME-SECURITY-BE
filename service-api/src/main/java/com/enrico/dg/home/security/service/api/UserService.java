@@ -13,4 +13,6 @@ public interface UserService {
   User register(User user);
 
   User login(String email);
+
+  User update(String id, User user);
 }

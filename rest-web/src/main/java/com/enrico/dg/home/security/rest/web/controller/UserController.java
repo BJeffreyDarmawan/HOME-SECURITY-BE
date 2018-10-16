@@ -14,6 +14,7 @@ import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.CacheService;
 import com.enrico.dg.home.security.service.api.UserService;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiPath.BASE_PATH)
+@RequestMapping(ApiPath.BASE_PATH + ApiPath.USER)
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
@@ -72,7 +73,12 @@ public class UserController {
     }
 
     @GetMapping(ApiPath.ID)
-    public BaseResponse<UserResponse> getUser(@PathVariable String id) {
+    public BaseResponse<UserResponse> getUser(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @PathVariable String id
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
 
       User user = userService.findOne(id);
 
@@ -105,6 +111,21 @@ public class UserController {
 
       return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
               null, toUserResponseList(userList));
+    }
+
+    @PutMapping(ApiPath.ID)
+    public BaseResponse<UserResponse> update(
+            @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+            @ApiParam(value = "macAddress, sosNumber, emergencyNumber") @RequestBody UserRequest userRequest,
+            @PathVariable String id
+    ) {
+
+      authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+      User user = userService.update(id, toUser(userRequest));
+
+      return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+              null, toUserResponse(user));
     }
 
     private User toUser(UserRequest userRequest) {
