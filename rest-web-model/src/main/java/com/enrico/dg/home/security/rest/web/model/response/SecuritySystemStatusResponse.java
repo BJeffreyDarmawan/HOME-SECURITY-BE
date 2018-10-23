@@ -2,7 +2,7 @@ package com.enrico.dg.home.security.rest.web.model.response;
 
 import com.enrico.dg.home.security.entity.CommonModel;
 
-public class SecuritySystemResponse extends CommonModel {
+public class SecuritySystemStatusResponse extends CommonModel {
 
   private Boolean isActive;
 
@@ -16,7 +16,7 @@ public class SecuritySystemResponse extends CommonModel {
 
   @Override
   public String toString() {
-    return "SecuritySystemResponse{" +
+    return "SecuritySystemStatusResponse{" +
             "isActive=" + isActive +
             '}';
   }

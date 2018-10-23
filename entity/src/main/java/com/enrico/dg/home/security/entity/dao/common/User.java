@@ -12,6 +12,8 @@ public class User extends BaseMongo {
     private String macAddress;
     private String sosNumber;
     private String emergencyNumber;
+    private String imageUrl;
+    private String publicId;
 
     public String getName() {
         return name;
@@ -69,6 +71,22 @@ public class User extends BaseMongo {
         this.emergencyNumber = emergencyNumber;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,6 +97,8 @@ public class User extends BaseMongo {
                 ", macAddress='" + macAddress + '\'' +
                 ", sosNumber='" + sosNumber + '\'' +
                 ", emergencyNumber='" + emergencyNumber + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publicId='" + publicId + '\'' +
                 '}';
     }
 }

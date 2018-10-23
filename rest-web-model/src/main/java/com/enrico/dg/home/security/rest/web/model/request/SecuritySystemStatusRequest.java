@@ -2,7 +2,7 @@ package com.enrico.dg.home.security.rest.web.model.request;
 
 import com.enrico.dg.home.security.entity.CommonModel;
 
-public class SecuritySystemRequest extends CommonModel {
+public class SecuritySystemStatusRequest extends CommonModel {
 
   private Boolean isActive;
 
@@ -16,7 +16,7 @@ public class SecuritySystemRequest extends CommonModel {
 
   @Override
   public String toString() {
-    return "SecuritySystemRequest{" +
+    return "SecuritySystemStatusRequest{" +
             "isActive=" + isActive +
             '}';
   }

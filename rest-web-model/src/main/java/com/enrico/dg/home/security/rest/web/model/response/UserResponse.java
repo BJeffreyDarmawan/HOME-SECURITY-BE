@@ -12,6 +12,8 @@ public class UserResponse extends CommonModel {
     private String macAddress;
     private String sosNumber;
     private String emergencyNumber;
+    private String imageUrl;
+    private String publicId;
     private String token;
 
     public String getId() {
@@ -54,14 +56,6 @@ public class UserResponse extends CommonModel {
         this.role = role;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getMacAddress() {
         return macAddress;
     }
@@ -86,6 +80,30 @@ public class UserResponse extends CommonModel {
         this.emergencyNumber = emergencyNumber;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         return "UserResponse{" +
@@ -97,6 +115,8 @@ public class UserResponse extends CommonModel {
                 ", macAddress='" + macAddress + '\'' +
                 ", sosNumber='" + sosNumber + '\'' +
                 ", emergencyNumber='" + emergencyNumber + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", publicId='" + publicId + '\'' +
                 ", token='" + token + '\'' +
                 '}';
     }

@@ -2,14 +2,14 @@ package com.enrico.dg.home.security.rest.web.controller;
 
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
-import com.enrico.dg.home.security.entity.dao.common.SecuritySystem;
+import com.enrico.dg.home.security.entity.dao.common.SecuritySystemStatus;
 import com.enrico.dg.home.security.entity.dao.common.User;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
-import com.enrico.dg.home.security.rest.web.model.request.SecuritySystemRequest;
+import com.enrico.dg.home.security.rest.web.model.request.SecuritySystemStatusRequest;
 import com.enrico.dg.home.security.rest.web.model.request.UserRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
-import com.enrico.dg.home.security.rest.web.model.response.SecuritySystemResponse;
+import com.enrico.dg.home.security.rest.web.model.response.SecuritySystemStatusResponse;
 import com.enrico.dg.home.security.rest.web.model.response.UserResponse;
 import com.enrico.dg.home.security.service.api.SecuritySystemService;
 import com.enrico.dg.home.security.service.api.UserService;
@@ -44,14 +44,14 @@ public class DeveloperController {
   }
 
   @PostMapping(ApiPath.INITIALIZE_SECURITY_SYSTEM)
-  public BaseResponse<SecuritySystemResponse> initializeSystem(
-          @RequestBody SecuritySystemRequest securitySystemRequest
+  public BaseResponse<SecuritySystemStatusResponse> initializeSystem(
+          @RequestBody SecuritySystemStatusRequest securitySystemStatusRequest
   ) {
 
-    SecuritySystem securitySystem = securitySystemService.initializeSystemStatus(toSecuritySystem(securitySystemRequest));
+    SecuritySystemStatus securitySystemStatus = securitySystemService.initializeSystemStatus(toSecuritySystem(securitySystemStatusRequest));
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-            null, toSecuritySystemResponse(securitySystem));
+            null, toSecuritySystemResponse(securitySystemStatus));
   }
 
   private User toUser(UserRequest userRequest) {
@@ -85,22 +85,22 @@ public class DeveloperController {
     return userResponse;
   }
 
-  private SecuritySystem toSecuritySystem(SecuritySystemRequest securitySystemRequest) {
-    SecuritySystem securitySystem = new SecuritySystem();
-    securitySystem.setActive(securitySystemRequest.getActive());
+  private SecuritySystemStatus toSecuritySystem(SecuritySystemStatusRequest securitySystemStatusRequest) {
+    SecuritySystemStatus securitySystemStatus = new SecuritySystemStatus();
+    securitySystemStatus.setActive(securitySystemStatusRequest.getActive());
 
-    return  securitySystem;
+    return securitySystemStatus;
   }
 
-  private SecuritySystemResponse toSecuritySystemResponse(SecuritySystem securitySystem) {
-    if(securitySystem == null) {
+  private SecuritySystemStatusResponse toSecuritySystemResponse(SecuritySystemStatus securitySystemStatus) {
+    if(securitySystemStatus == null) {
       return null;
     }
 
-    SecuritySystemResponse securitySystemResponse = new SecuritySystemResponse();
-    securitySystemResponse.setActive(securitySystem.getActive());
+    SecuritySystemStatusResponse securitySystemStatusResponse = new SecuritySystemStatusResponse();
+    securitySystemStatusResponse.setActive(securitySystemStatus.getActive());
 
-    return securitySystemResponse;
+    return securitySystemStatusResponse;
   }
 
   @ModelAttribute

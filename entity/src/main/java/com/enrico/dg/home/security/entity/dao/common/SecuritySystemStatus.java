@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @GeneratePojoBuilder
 @Document(collection = CollectionName.SECURITY_SYSTEM)
-public class SecuritySystem extends BaseMongo {
+public class SecuritySystemStatus extends BaseMongo {
 
   private Boolean isActive;
 
@@ -20,7 +20,7 @@ public class SecuritySystem extends BaseMongo {
 
   @Override
   public String toString() {
-    return "SecuritySystem{" +
+    return "SecuritySystemStatus{" +
             "isActive=" + isActive +
             '}';
   }

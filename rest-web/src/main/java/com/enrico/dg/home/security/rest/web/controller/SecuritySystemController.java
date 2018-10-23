@@ -1,13 +1,16 @@
 package com.enrico.dg.home.security.rest.web.controller;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
-import com.enrico.dg.home.security.entity.dao.common.SecuritySystem;
+import com.enrico.dg.home.security.entity.dao.common.SecuritySystemStatus;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
-import com.enrico.dg.home.security.rest.web.model.request.SecuritySystemRequest;
+import com.enrico.dg.home.security.rest.web.model.request.SecuritySystemStatusRequest;
+import com.enrico.dg.home.security.rest.web.model.request.UnlockDoorRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
-import com.enrico.dg.home.security.rest.web.model.response.SecuritySystemResponse;
+import com.enrico.dg.home.security.rest.web.model.response.SecuritySystemStatusResponse;
+import com.enrico.dg.home.security.rest.web.model.response.UnlockDoorResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.SecuritySystemService;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping(ApiPath.BASE_PATH + ApiPath.SECURITY_SYSTEM)
@@ -31,49 +35,74 @@ public class SecuritySystemController {
   @Autowired
   private SecuritySystemService securitySystemService;
 
-  @GetMapping
-  private BaseResponse<SecuritySystemResponse> get (
-          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest
+//  @GetMapping
+//  private BaseResponse<SecuritySystemStatusResponse> get (
+//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest
+//  ) {
+//
+//    authService.isTokenValid(mandatoryRequest.getAccessToken());
+//
+//    SecuritySystemStatus securitySystemStatus = securitySystemService.findSystemStatus();
+//
+//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+//            null, toSecuritySystemStatusResponse(securitySystemStatus));
+//  }
+//
+//  @PutMapping
+//  private BaseResponse<SecuritySystemStatusResponse> update (
+//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+//          @RequestBody SecuritySystemStatusRequest securitySystemStatusRequest
+//  ) {
+//
+//    authService.isTokenValid(mandatoryRequest.getAccessToken());
+//
+//    SecuritySystemStatus securitySystemStatus = securitySystemService.updateSystemStatus(toSecuritySystemStatus(securitySystemStatusRequest));
+//
+//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+//            null, toSecuritySystemStatusResponse(securitySystemStatus));
+//  }
+
+  @PostMapping(ApiPath.DOOR_SENSORS_MESSAGE)
+  private BaseResponse<UnlockDoorResponse> unlockDoorMessage (
+          @RequestBody UnlockDoorRequest unlockDoorRequest
   ) {
 
-    authService.isTokenValid(mandatoryRequest.getAccessToken());
-
-    SecuritySystem securitySystem = securitySystemService.findSystemStatus();
-
-    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-            null, toSecuritySystemResponse(securitySystem));
-  }
-
-  @PutMapping
-  private BaseResponse<SecuritySystemResponse> update (
-          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-          @RequestBody SecuritySystemRequest securitySystemRequest
-  ) {
-
-    authService.isTokenValid(mandatoryRequest.getAccessToken());
-
-    SecuritySystem securitySystem = securitySystemService.updateSystemStatus(toSecuritySystem(securitySystemRequest));
+    UnlockDoorResponse unlockDoorResponse = toUnlockDoorResponse(unlockDoorRequest);
+    LOGGER.info(unlockDoorResponse.getSensorsFeedback().toString());
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-            null, toSecuritySystemResponse(securitySystem));
+            null, unlockDoorResponse);
   }
 
-  private SecuritySystem toSecuritySystem(SecuritySystemRequest securitySystemRequest) {
-    SecuritySystem securitySystem = new SecuritySystem();
-    securitySystem.setActive(securitySystemRequest.getActive());
+  private SecuritySystemStatus toSecuritySystemStatus(SecuritySystemStatusRequest securitySystemStatusRequest) {
+    SecuritySystemStatus securitySystemStatus = new SecuritySystemStatus();
+    securitySystemStatus.setActive(securitySystemStatusRequest.getActive());
 
-    return  securitySystem;
+    return securitySystemStatus;
   }
 
-  private SecuritySystemResponse toSecuritySystemResponse(SecuritySystem securitySystem) {
-    if(securitySystem == null) {
+  private SecuritySystemStatusResponse toSecuritySystemStatusResponse(SecuritySystemStatus securitySystemStatus) {
+    if(securitySystemStatus == null) {
       return null;
     }
 
-    SecuritySystemResponse securitySystemResponse = new SecuritySystemResponse();
-    securitySystemResponse.setActive(securitySystem.getActive());
+    SecuritySystemStatusResponse securitySystemStatusResponse = new SecuritySystemStatusResponse();
+    securitySystemStatusResponse.setActive(securitySystemStatus.getActive());
 
-    return securitySystemResponse;
+    return securitySystemStatusResponse;
+  }
+
+  private UnlockDoorResponse toUnlockDoorResponse(UnlockDoorRequest unlockDoorRequest) {
+
+    Map unlockDoorMessageMap = ObjectUtils.asMap(
+            "messageType", unlockDoorRequest.getMessageType(),
+            "message", unlockDoorRequest.getMessage(),
+            "command", unlockDoorRequest.getCommand());
+
+    UnlockDoorResponse unlockDoorResponse = new UnlockDoorResponse();
+    unlockDoorResponse.setSensorsFeedback(unlockDoorMessageMap);
+
+    return unlockDoorResponse;
   }
 
   @ModelAttribute
