@@ -15,4 +15,5 @@ public interface ApiPath {
   String DOOR_SENSORS_MESSAGE = "/door-sensor-message";
   String HARDWARE = "/hardware";
   String USER_IMAGE = "/selfie";
+  String MESSAGE = "/message";
 }

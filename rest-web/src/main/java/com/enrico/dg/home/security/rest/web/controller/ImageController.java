@@ -1,11 +1,14 @@
 package com.enrico.dg.home.security.rest.web.controller;
 
+import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
 import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
 import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
+import com.enrico.dg.home.security.rest.web.model.request.UnlockDoorRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
+import com.enrico.dg.home.security.rest.web.model.response.UnlockDoorResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.ImageService;
 import io.swagger.annotations.ApiParam;
@@ -85,6 +88,31 @@ public class ImageController {
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
             null, uploadResult);
   }
+
+  @PutMapping(ApiPath.MESSAGE + ApiPath.ID)
+  public BaseResponse<CloudinaryImage> updateCapturedImageMessage(
+          @RequestBody UnlockDoorRequest unlockDoorRequest,
+          @PathVariable String id
+  ) {
+
+    CloudinaryImage cloudinaryImage = imageService.updateImageMessage(unlockDoorRequest, id);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, cloudinaryImage);
+  }
+
+//  private UnlockDoorResponse toUnlockDoorResponse(UnlockDoorRequest unlockDoorRequest) {
+//
+//    Map unlockDoorMessageMap = ObjectUtils.asMap(
+//            "messageType", unlockDoorRequest.getMessageType(),
+//            "message", unlockDoorRequest.getMessage(),
+//            "command", unlockDoorRequest.getCommand());
+//
+//    UnlockDoorResponse unlockDoorResponse = new UnlockDoorResponse();
+//    unlockDoorResponse.setSensorsFeedback(unlockDoorMessageMap);
+//
+//    return unlockDoorResponse;
+//  }
 
   @ModelAttribute
   public MandatoryRequest getMandatoryParameter(HttpServletRequest request) {

@@ -5,10 +5,10 @@ import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.dao.api.ImageRepository;
 import com.enrico.dg.home.security.dao.api.UserRepository;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
-import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
-import com.enrico.dg.home.security.entity.dao.common.CloudinaryImageBuilder;
-import com.enrico.dg.home.security.entity.dao.common.User;
+import com.enrico.dg.home.security.entity.dao.common.*;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
+import com.enrico.dg.home.security.rest.web.model.request.UnlockDoorRequest;
+import com.enrico.dg.home.security.rest.web.model.response.UnlockDoorResponse;
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +63,7 @@ public class ImageServiceImpl implements ImageService {
       imageRepository.save(cloudinaryImage);
 
       upload.put("notification", "There are some activities at your house. Please check the attached picture.");
+      upload.put("id", cloudinaryImage.getId());
 
       return upload;
     } catch (IOException e) {
@@ -114,6 +115,27 @@ public class ImageServiceImpl implements ImageService {
               ResponseCode.RUNTIME_ERROR.getMessage());
     }
   }
+
+  @Override
+  public CloudinaryImage updateImageMessage(UnlockDoorRequest unlockDoorRequest, String id) {
+
+    CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
+
+    if(cloudinaryImage == null) {
+      return null;
+    }
+
+    SensorsFeedbackMap sensorsFeedbackMap = new SensorsFeedbackMapBuilder()
+            .withCommand(unlockDoorRequest.getCommand())
+            .withMessage(unlockDoorRequest.getMessage())
+            .withMessageType(unlockDoorRequest.getMessageType())
+            .build();
+
+    cloudinaryImage.setSensorsFeedback(sensorsFeedbackMap);
+
+    return imageRepository.save(cloudinaryImage);
+  }
+
 
 //  @Override
 //  public void deleteImage(String id) {
