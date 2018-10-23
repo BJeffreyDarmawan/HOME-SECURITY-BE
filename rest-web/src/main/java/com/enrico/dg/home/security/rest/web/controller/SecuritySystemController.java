@@ -35,44 +35,44 @@ public class SecuritySystemController {
   @Autowired
   private SecuritySystemService securitySystemService;
 
-//  @GetMapping
-//  private BaseResponse<SecuritySystemStatusResponse> get (
-//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest
-//  ) {
-//
-//    authService.isTokenValid(mandatoryRequest.getAccessToken());
-//
-//    SecuritySystemStatus securitySystemStatus = securitySystemService.findSystemStatus();
-//
-//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-//            null, toSecuritySystemStatusResponse(securitySystemStatus));
-//  }
-//
-//  @PutMapping
-//  private BaseResponse<SecuritySystemStatusResponse> update (
-//          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
-//          @RequestBody SecuritySystemStatusRequest securitySystemStatusRequest
-//  ) {
-//
-//    authService.isTokenValid(mandatoryRequest.getAccessToken());
-//
-//    SecuritySystemStatus securitySystemStatus = securitySystemService.updateSystemStatus(toSecuritySystemStatus(securitySystemStatusRequest));
-//
-//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-//            null, toSecuritySystemStatusResponse(securitySystemStatus));
-//  }
-
-  @PostMapping(ApiPath.DOOR_SENSORS_MESSAGE)
-  private BaseResponse<UnlockDoorResponse> unlockDoorMessage (
-          @RequestBody UnlockDoorRequest unlockDoorRequest
+  @GetMapping
+  private BaseResponse<SecuritySystemStatusResponse> get (
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest
   ) {
 
-    UnlockDoorResponse unlockDoorResponse = toUnlockDoorResponse(unlockDoorRequest);
-    LOGGER.info(unlockDoorResponse.getSensorsFeedback().toString());
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    SecuritySystemStatus securitySystemStatus = securitySystemService.findSystemStatus();
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
-            null, unlockDoorResponse);
+            null, toSecuritySystemStatusResponse(securitySystemStatus));
   }
+
+  @PutMapping
+  private BaseResponse<SecuritySystemStatusResponse> update (
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @RequestBody SecuritySystemStatusRequest securitySystemStatusRequest
+  ) {
+
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    SecuritySystemStatus securitySystemStatus = securitySystemService.updateSystemStatus(toSecuritySystemStatus(securitySystemStatusRequest));
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, toSecuritySystemStatusResponse(securitySystemStatus));
+  }
+
+//  @PostMapping(ApiPath.DOOR_SENSORS_MESSAGE)
+//  private BaseResponse<UnlockDoorResponse> unlockDoorMessage (
+//          @RequestBody UnlockDoorRequest unlockDoorRequest
+//  ) {
+//
+//    UnlockDoorResponse unlockDoorResponse = toUnlockDoorResponse(unlockDoorRequest);
+//    LOGGER.info(unlockDoorResponse.getSensorsFeedback().toString());
+//
+//    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+//            null, unlockDoorResponse);
+//  }
 
   private SecuritySystemStatus toSecuritySystemStatus(SecuritySystemStatusRequest securitySystemStatusRequest) {
     SecuritySystemStatus securitySystemStatus = new SecuritySystemStatus();
