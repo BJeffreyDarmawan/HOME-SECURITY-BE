@@ -3,9 +3,11 @@ package com.enrico.dg.home.security.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.dao.api.ImageRepository;
+import com.enrico.dg.home.security.dao.api.UserRepository;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
 import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
 import com.enrico.dg.home.security.entity.dao.common.CloudinaryImageBuilder;
+import com.enrico.dg.home.security.entity.dao.common.User;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.service.api.ImageService;
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,11 @@ public class ImageServiceImpl implements ImageService {
   @Autowired
   private ImageRepository imageRepository;
 
+  @Autowired
+  private UserRepository userRepository;
+
   @Override
-  public Map<String, String> uploadImage(MultipartFile aFile) {
+  public Map<String, String> uploadCapturedImage(MultipartFile aFile) {
 
     Cloudinary cloudinary = cloudinaryConnect();
 
@@ -62,7 +66,37 @@ public class ImageServiceImpl implements ImageService {
 
       return upload;
     } catch (IOException e) {
-      LOGGER.info(e.getMessage());
+      LOGGER.error(e.getMessage());
+      throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
+              ResponseCode.SYSTEM_ERROR.getMessage());
+    }
+  }
+
+  @Override
+  public Map<String, String> uploadSelfieImage(MultipartFile aFile, String id) {
+
+    Cloudinary cloudinary = cloudinaryConnect();
+
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+    Date date = new Date();
+
+    try {
+      User user = userRepository.findByIsDeletedAndId(0, id);
+
+      File file = Files.createTempFile("", aFile.getOriginalFilename()).toFile();
+      aFile.transferTo(file);
+      Map params = ObjectUtils.asMap(
+              "public_id", file.getName(),
+              "folder", formatter.format(date));
+      Map upload = cloudinary.uploader().upload(file, params);
+
+      user.setImageUrl((String) upload.get("url"));
+      user.setPublicId((String) upload.get("public_id"));
+      userRepository.save(user);
+
+      return upload;
+    } catch (IOException e) {
+      LOGGER.error(e.getMessage());
       throw new BusinessLogicException(ResponseCode.SYSTEM_ERROR.getCode(),
               ResponseCode.SYSTEM_ERROR.getMessage());
     }

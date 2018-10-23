@@ -1,9 +1,9 @@
 package com.enrico.dg.home.security.service.api;
 
-import com.enrico.dg.home.security.entity.dao.common.SecuritySystem;
+import com.enrico.dg.home.security.entity.dao.common.SecuritySystemStatus;
 
 public interface SecuritySystemService {
-  SecuritySystem findSystemStatus();
-  SecuritySystem updateSystemStatus(SecuritySystem securitySystem);
-  SecuritySystem initializeSystemStatus(SecuritySystem securitySystem);
+  SecuritySystemStatus findSystemStatus();
+  SecuritySystemStatus updateSystemStatus(SecuritySystemStatus securitySystemStatus);
+  SecuritySystemStatus initializeSystemStatus(SecuritySystemStatus securitySystemStatus);
 }

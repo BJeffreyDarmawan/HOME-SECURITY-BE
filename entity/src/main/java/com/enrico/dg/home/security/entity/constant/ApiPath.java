@@ -12,4 +12,7 @@ public interface ApiPath {
   String IMAGE = "/image";
   String SECURITY_SYSTEM = "/security-system";
   String INITIALIZE_SECURITY_SYSTEM = "/initialize-security-system";
+  String DOOR_SENSORS_MESSAGE = "/door-sensor-message";
+  String HARDWARE = "/hardware";
+  String USER_IMAGE = "/selfie";
 }

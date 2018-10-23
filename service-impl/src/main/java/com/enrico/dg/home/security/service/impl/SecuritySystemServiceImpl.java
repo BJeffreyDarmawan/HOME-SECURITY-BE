@@ -2,7 +2,7 @@ package com.enrico.dg.home.security.service.impl;
 
 import com.enrico.dg.home.security.dao.api.SecuritySystemRepository;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
-import com.enrico.dg.home.security.entity.dao.common.SecuritySystem;
+import com.enrico.dg.home.security.entity.dao.common.SecuritySystemStatus;
 import com.enrico.dg.home.security.libraries.exception.BusinessLogicException;
 import com.enrico.dg.home.security.service.api.SecuritySystemService;
 import org.slf4j.Logger;
@@ -19,39 +19,39 @@ public class SecuritySystemServiceImpl implements SecuritySystemService {
   private SecuritySystemRepository securitySystemRepository;
 
   @Override
-  public SecuritySystem findSystemStatus() {
+  public SecuritySystemStatus findSystemStatus() {
 
-    SecuritySystem securitySystem = securitySystemRepository.findByIsDeleted(0);
+    SecuritySystemStatus securitySystemStatus = securitySystemRepository.findByIsDeleted(0);
 
-    if (securitySystem == null) {
+    if (securitySystemStatus == null) {
       throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
               ResponseCode.DATA_NOT_EXIST.getMessage());
     }
 
-    return securitySystem;
+    return securitySystemStatus;
   }
 
   @Override
-  public SecuritySystem updateSystemStatus(SecuritySystem securitySystem) {
-    SecuritySystem newSecuritySystem = securitySystemRepository.findByIsDeleted(0);
+  public SecuritySystemStatus updateSystemStatus(SecuritySystemStatus securitySystemStatus) {
+    SecuritySystemStatus newSecuritySystemStatus = securitySystemRepository.findByIsDeleted(0);
 
-    if (securitySystem == null) {
+    if (securitySystemStatus == null) {
       throw new BusinessLogicException(ResponseCode.DATA_NOT_EXIST.getCode(),
               ResponseCode.DATA_NOT_EXIST.getMessage());
     }
 
-    newSecuritySystem.setActive(securitySystem.getActive());
+    newSecuritySystemStatus.setActive(securitySystemStatus.getActive());
 
-    return securitySystemRepository.save(newSecuritySystem);
+    return securitySystemRepository.save(newSecuritySystemStatus);
   }
 
   @Override
-  public SecuritySystem initializeSystemStatus(SecuritySystem securitySystem) {
+  public SecuritySystemStatus initializeSystemStatus(SecuritySystemStatus securitySystemStatus) {
 
-    SecuritySystem newSecuritySystem = new SecuritySystem();
+    SecuritySystemStatus newSecuritySystemStatus = new SecuritySystemStatus();
 
-    newSecuritySystem.setActive(securitySystem.getActive());
+    newSecuritySystemStatus.setActive(securitySystemStatus.getActive());
 
-    return securitySystemRepository.save(newSecuritySystem);
+    return securitySystemRepository.save(newSecuritySystemStatus);
   }
 }

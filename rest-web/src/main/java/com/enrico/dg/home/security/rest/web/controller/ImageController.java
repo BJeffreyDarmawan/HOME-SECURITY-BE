@@ -8,7 +8,6 @@ import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.ImageService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,12 +63,24 @@ public class ImageController {
 //            null, "Successfully Delete Image");
 //  }
 
-  @PostMapping
-  public BaseResponse<Map<String, String>> uploadImageToCloudinary(
+  @PostMapping(ApiPath.HARDWARE)
+  public BaseResponse<Map<String, String>> uploadCapturedImageToCloudinary(
           @RequestParam(value = "capturedImage") MultipartFile aFile
   ) {
 
-    Map<String, String> uploadResult = imageService.uploadImage(aFile);
+    Map<String, String> uploadResult = imageService.uploadCapturedImage(aFile);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, uploadResult);
+  }
+
+  @PostMapping(ApiPath.USER_IMAGE + ApiPath.ID)
+  public BaseResponse<Map<String, String>> uploadSelfieImageToCloudinary(
+          @RequestParam(value = "selfieImage") MultipartFile aFile,
+          @PathVariable String id
+  ) {
+
+    Map<String, String> uploadResult = imageService.uploadSelfieImage(aFile, id);
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
             null, uploadResult);
