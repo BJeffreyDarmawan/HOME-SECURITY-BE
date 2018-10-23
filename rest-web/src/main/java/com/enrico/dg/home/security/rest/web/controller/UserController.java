@@ -155,6 +155,8 @@ public class UserController {
         userResponse.setMacAddress(user.getMacAddress());
         userResponse.setSosNumber(user.getSosNumber());
         userResponse.setEmergencyNumber(user.getEmergencyNumber());
+        userResponse.setImageUrl(user.getImageUrl());
+        userResponse.setPublicId(user.getPublicId());
 
         return userResponse;
     }
@@ -174,6 +176,8 @@ public class UserController {
       userResponse.setMacAddress(user.getMacAddress());
       userResponse.setSosNumber(user.getSosNumber());
       userResponse.setEmergencyNumber(user.getEmergencyNumber());
+      userResponse.setImageUrl(user.getImageUrl());
+      userResponse.setPublicId(user.getPublicId());
 
       return userResponse;
     }
