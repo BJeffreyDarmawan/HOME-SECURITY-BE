@@ -37,6 +37,9 @@ public class ImageServiceImpl implements ImageService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private EmailServiceImpl emailService;
+
   @Override
   public Map<String, String> uploadCapturedImage(MultipartFile aFile) {
 
@@ -120,7 +123,7 @@ public class ImageServiceImpl implements ImageService {
 
     try{
       List<CloudinaryImage> cloudinaryImages = imageRepository
-              .findAllByCreatedDateAfterAndSensorsFeedbackMessageTypeContainsOrderByCreatedDateDesc(date, "warning");
+              .findAllByCreatedDateAfterAndSensorsFeedbackMessageTypeContainsOrderByCreatedDateDesc(date, "WARNING");
 
       return cloudinaryImages;
     } catch (Exception e) {
@@ -141,7 +144,7 @@ public class ImageServiceImpl implements ImageService {
     SensorsFeedbackMap sensorsFeedbackMap = new SensorsFeedbackMapBuilder()
             .withCommand(unlockDoorRequest.getCommand())
             .withMessage(unlockDoorRequest.getMessage())
-            .withMessageType(unlockDoorRequest.getMessageType())
+            .withMessageType(unlockDoorRequest.getMessageType().toUpperCase())
             .build();
 
     cloudinaryImage.setSensorsFeedback(sensorsFeedbackMap);
@@ -153,7 +156,9 @@ public class ImageServiceImpl implements ImageService {
     TimerTask task = new TimerTask() {
       @Override
       public void run() {
-        sendEmail();
+        LOGGER.info("Sending Email...");
+        emailService.sendMail();
+        LOGGER.info("Email Sent!");
       }
     };
     Timer timer = new Timer("Timer");
@@ -209,24 +214,11 @@ public class ImageServiceImpl implements ImageService {
   //this is supposed to be created in outboundserviceimpl, if have time just change it
   private void sendMessage(SensorsFeedbackMap sensorsFeedback) {
 
-    final String uri = "http://ec28477f.ngrok.io/command-open-door";
+    final String uri = "http://socket-fp-soft-eng.herokuapp.com/command-open-door";
 
     RestTemplate restTemplate = new RestTemplate();
     SensorsFeedbackMap result = restTemplate.postForObject(uri, sensorsFeedback, SensorsFeedbackMap.class);
-  }
 
-  private void sendEmail() {
-
-    String to = "bc_bill@ymail.com";
-    String from = "bc_bill@ymail.com";
-    String host = "localhost";
-
-    Properties properties = System.getProperties();
-
-    properties.setProperty("mail.smtp.host", host);
-
-//    Session session = Session.getDefaultInstance(properties);
-
-    LOGGER.info("Email Sent!");
+    LOGGER.info(result.toString());
   }
 }
