@@ -1,6 +1,5 @@
 package com.enrico.dg.home.security.rest.web.controller;
 
-import com.cloudinary.utils.ObjectUtils;
 import com.enrico.dg.home.security.entity.constant.ApiPath;
 import com.enrico.dg.home.security.entity.constant.enums.ResponseCode;
 import com.enrico.dg.home.security.entity.dao.common.CloudinaryImage;
@@ -8,7 +7,6 @@ import com.enrico.dg.home.security.libraries.utility.BaseResponseHelper;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import com.enrico.dg.home.security.rest.web.model.request.UnlockDoorRequest;
 import com.enrico.dg.home.security.rest.web.model.response.BaseResponse;
-import com.enrico.dg.home.security.rest.web.model.response.UnlockDoorResponse;
 import com.enrico.dg.home.security.service.api.AuthService;
 import com.enrico.dg.home.security.service.api.ImageService;
 import io.swagger.annotations.ApiParam;
@@ -39,7 +37,7 @@ public class ImageController {
   private ImageService imageService;
 
   @GetMapping
-  private BaseResponse<List<CloudinaryImage>> getImage(
+  public BaseResponse<List<CloudinaryImage>> getImage(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
   ) {
@@ -47,6 +45,20 @@ public class ImageController {
     authService.isTokenValid(mandatoryRequest.getAccessToken());
 
     List<CloudinaryImage> cloudinaryImageList = imageService.getImages(date);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, cloudinaryImageList);
+  }
+
+  @GetMapping(ApiPath.WARNING)
+  public BaseResponse<List<CloudinaryImage>> getWarningImage(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
+  ) {
+
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    List<CloudinaryImage> cloudinaryImageList = imageService.getWarningImages(date);
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
             null, cloudinaryImageList);
@@ -96,6 +108,17 @@ public class ImageController {
   ) {
 
     CloudinaryImage cloudinaryImage = imageService.updateImageMessage(unlockDoorRequest, id);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, cloudinaryImage);
+  }
+
+  @PutMapping(ApiPath.IS_READ + ApiPath.ID)
+  public BaseResponse<CloudinaryImage> updateEmergencyNotification(
+          @PathVariable String id
+  ) {
+
+    CloudinaryImage cloudinaryImage = imageService.updateIsRead(id);
 
     return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
             null, cloudinaryImage);

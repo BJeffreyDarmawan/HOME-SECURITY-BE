@@ -85,7 +85,8 @@ public class UserController {
       return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
               null, toUserResponse(user));
     }
-
+    //if user logout with the same id that has alrd logout, it will overwrite the previous value(token) with the new one
+    //resulting in the previous value(token) to be usable again as long as it has not yet expired
     @GetMapping(ApiPath.LOGOUT + ApiPath.ID)
     public BaseResponse<String> logout(
             @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,

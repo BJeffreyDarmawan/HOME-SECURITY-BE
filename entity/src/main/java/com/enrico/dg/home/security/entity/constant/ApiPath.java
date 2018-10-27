@@ -16,4 +16,6 @@ public interface ApiPath {
   String HARDWARE = "/hardware";
   String USER_IMAGE = "/selfie";
   String MESSAGE = "/message";
+  String WARNING = "/warning";
+  String IS_READ = "/read";
 }
