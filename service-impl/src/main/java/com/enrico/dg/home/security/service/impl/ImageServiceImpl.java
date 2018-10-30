@@ -172,12 +172,12 @@ public class ImageServiceImpl implements ImageService {
 
         CloudinaryImage updatedCloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
 
-        if(updatedCloudinaryImage.getRead().equals(Boolean.FALSE) && unlockDoorRequest.getMessageType().equals("WARNING")) {
+        if(updatedCloudinaryImage.getRead().equals(Boolean.FALSE) && sensorsFeedbackMap.getMessageType().equals("WARNING")) {
           LOGGER.info("Sending Email...");
           emailService.sendMail();
           LOGGER.info("Email Sent!");
         } else {
-          LOGGER.info("Read by User Already");
+          LOGGER.info("Clear or Read by User Already");
         }
       }
     };
