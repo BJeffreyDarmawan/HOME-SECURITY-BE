@@ -39,9 +39,6 @@ public abstract class BaseMongo implements Serializable {
   @Field(value = BaseMongoFields.UPDATED_BY)
   private String updatedBy;
 
-  @Field(value = BaseMongoFields.STORE_ID)
-  private String storeId;
-
   @Field(value = BaseMongoFields.IS_DELETED)
   private Integer isDeleted = 0;
 
@@ -93,14 +90,6 @@ public abstract class BaseMongo implements Serializable {
     this.updatedBy = updatedBy;
   }
 
-  public String getStoreId() {
-    return storeId;
-  }
-
-  public void setStoreId(String storeId) {
-    this.storeId = storeId;
-  }
-
   public Integer getIsDeleted() {
     return isDeleted;
   }
@@ -118,7 +107,6 @@ public abstract class BaseMongo implements Serializable {
         ", createdBy='" + createdBy + '\'' +
         ", updatedDate=" + updatedDate +
         ", updatedBy='" + updatedBy + '\'' +
-        ", storeId='" + storeId + '\'' +
         ", isDeleted=" + isDeleted +
         "} " + super.toString();
   }

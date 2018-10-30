@@ -6,7 +6,6 @@ import net.karneim.pojobuilder.GeneratePojoBuilder;
 public class JWTokenClaim {
 
   private String userId;
-  private Integer userLevel;
 
   public String getUserId() {
     return userId;
@@ -16,19 +15,10 @@ public class JWTokenClaim {
     this.userId = userId;
   }
 
-  public Integer getUserLevel() {
-    return userLevel;
-  }
-
-  public void setUserLevel(Integer userLevel) {
-    this.userLevel = userLevel;
-  }
-
   @Override
   public String toString() {
     return "JWTokenClaim{" +
         "userId='" + userId + '\'' +
-        ", userLevel=" + userLevel +
         '}';
   }
 }

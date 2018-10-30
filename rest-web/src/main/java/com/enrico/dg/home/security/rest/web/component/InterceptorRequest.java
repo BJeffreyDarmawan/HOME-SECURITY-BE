@@ -1,6 +1,5 @@
 package com.enrico.dg.home.security.rest.web.component;
 
-import com.enrico.dg.home.security.entity.constant.fields.BaseMongoFields;
 import com.enrico.dg.home.security.rest.web.model.request.MandatoryRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +17,9 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
       throws Exception {
     MandatoryRequest mandatoryRequest = new MandatoryRequestBuilder()
         .withAccessToken(request.getHeader("accessToken"))
-        .withChannelId(request.getHeader("channelId")).build();
+        .build();
 
     MDC.put("mandatoryRequest", mandatoryRequest);
-    MDC.put(BaseMongoFields.CHANNEL_ID, request.getHeader("channelId"));
     MDC.put("accessToken", request.getHeader("accessToken"));
 
     request.setAttribute("mandatory", mandatoryRequest);

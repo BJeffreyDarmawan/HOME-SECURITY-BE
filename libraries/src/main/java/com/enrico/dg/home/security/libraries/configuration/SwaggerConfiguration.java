@@ -31,10 +31,7 @@ public class SwaggerConfiguration {
         .globalOperationParameters(Arrays.asList(
             new ParameterBuilder().name("accessToken").parameterType(HEADER)
                 .modelRef(new ModelRef(STRING)).required(true).defaultValue("TOKEN")
-                .description("client's access token").build(),
-            new ParameterBuilder().name("channelId").parameterType(HEADER)
-                .modelRef(new ModelRef(STRING)).required(true).defaultValue("WEB")
-                .description("client's channel id").build()))
+                .description("client's access token").build()))
         .genericModelSubstitutes(DeferredResult.class, ResponseEntity.class);
   }
 }

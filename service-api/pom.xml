@@ -17,9 +17,5 @@
       <groupId>com.enrico.dg</groupId>
       <artifactId>dao</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.enrico.dg</groupId>
-      <artifactId>outbound-impl</artifactId>
-    </dependency>
   </dependencies>
 </project>

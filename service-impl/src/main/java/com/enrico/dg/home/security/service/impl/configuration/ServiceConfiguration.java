@@ -67,9 +67,4 @@ public class ServiceConfiguration {
   public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory, MongoConverter converter) {
     return new MongoTemplate(mongoDbFactory, converter);
   }
-
-  @Bean
-  public AuditorAware<String> stringAuditorAware() {
-    return () -> "system";
-  }
 }

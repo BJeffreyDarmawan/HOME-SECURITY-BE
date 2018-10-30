@@ -8,17 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
 public class MandatoryRequest implements Serializable {
 
   @NotBlank
-  private String channelId;
-  @NotBlank
   private String accessToken;
-
-  public String getChannelId() {
-    return channelId;
-  }
-
-  public void setChannelId(String channelId) {
-    this.channelId = channelId;
-  }
 
   public String getAccessToken() {
     return accessToken;
@@ -31,7 +21,6 @@ public class MandatoryRequest implements Serializable {
   @Override
   public String toString() {
     return "MandatoryRequest{" +
-        "channelId='" + channelId + '\'' +
         ", accessToken='" + accessToken + '\'' +
         '}';
   }

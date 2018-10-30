@@ -24,7 +24,7 @@
     <joda.time.version>2.9.9</joda.time.version>
     <fongo.version>2.1.0</fongo.version>
     <apache.common.lang3.version>3.6</apache.common.lang3.version>
-    <springfox.version>2.7.0</springfox.version>
+    <springfox.version>2.9.2</springfox.version>
     <retrofit.version>2.3.0</retrofit.version>
     <hibernate.version>6.0.5.Final</hibernate.version>
     <jacoco.maven.plugin.version>0.7.9</jacoco.maven.plugin.version>
@@ -37,7 +37,7 @@
     <powermock.version>1.7.0</powermock.version>
     <rx.java.version>2.1.7</rx.java.version>
     <auth0.version>3.2.0</auth0.version>
-    <fasterxml.jackson.version>2.8.8</fasterxml.jackson.version>
+    <fasterxml.jackson.version>2.9.6</fasterxml.jackson.version>
     <project.lombok.version>1.16.16</project.lombok.version>
     <commons.codec.version>1.4</commons.codec.version>
   </properties>
@@ -192,6 +192,26 @@
         <artifactId>powermock-api-mockito</artifactId>
         <version>${powermock.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.cloudinary</groupId>
+        <artifactId>cloudinary-http44</artifactId>
+        <version>1.19.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-mail</artifactId>
+        <version>2.0.6.RELEASE</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>1.4.7</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>javax.mail-api</artifactId>
+        <version>1.6.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
