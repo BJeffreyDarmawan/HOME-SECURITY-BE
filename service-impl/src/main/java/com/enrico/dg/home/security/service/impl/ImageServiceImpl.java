@@ -155,7 +155,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     SensorsFeedbackMap sensorsFeedbackMap = new SensorsFeedbackMapBuilder()
-            .withCommand(unlockDoorRequest.getCommand())
+            .withCommand(unlockDoorRequest.getCommand().toUpperCase())
             .withMessage(unlockDoorRequest.getMessage())
             .withMessageType(unlockDoorRequest.getMessageType().toUpperCase())
             .build();
@@ -172,7 +172,7 @@ public class ImageServiceImpl implements ImageService {
 
         CloudinaryImage updatedCloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
 
-        if(updatedCloudinaryImage.getRead().equals(Boolean.FALSE)) {
+        if(updatedCloudinaryImage.getRead().equals(Boolean.FALSE) && unlockDoorRequest.getMessageType().equals("WARNING")) {
           LOGGER.info("Sending Email...");
           emailService.sendMail();
           LOGGER.info("Email Sent!");
@@ -234,10 +234,18 @@ public class ImageServiceImpl implements ImageService {
   //this is supposed to be created in outboundserviceimpl, if have time just change it
   private void sendMessage(SensorsFeedbackMap sensorsFeedback) {
 
-    final String uri = "http://socket-fp-soft-eng.herokuapp.com/command-unlock-door";
+    final String unlockDoorUri = "http://socket-fp-soft-eng.herokuapp.com/command-unlock-door";
+    final String windowNotificationUri = "http://socket-fp-soft-eng.herokuapp.com/message-notification";
 
     RestTemplate restTemplate = new RestTemplate();
-    SensorsFeedbackMap result = restTemplate.postForObject(uri, sensorsFeedback, SensorsFeedbackMap.class);
+    SensorsFeedbackMap result;
+
+    if(sensorsFeedback.getCommand().equals("UNLOCK")) {
+      result = restTemplate.postForObject(unlockDoorUri, sensorsFeedback, SensorsFeedbackMap.class);
+    } else {
+      //command is probably "Alert"
+      result = restTemplate.postForObject(windowNotificationUri, sensorsFeedback, SensorsFeedbackMap.class);
+    }
 
     LOGGER.info(result.toString());
   }
