@@ -106,6 +106,19 @@ public class ImageServiceImpl implements ImageService {
   }
 
   @Override
+  public CloudinaryImage getImageById(String id) {
+
+    CloudinaryImage cloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
+
+    if(cloudinaryImage == null) {
+      return null;
+    }
+
+    return cloudinaryImage;
+  }
+
+
+  @Override
   public List<CloudinaryImage> getImages(Date date) {
 
     try{
@@ -156,9 +169,16 @@ public class ImageServiceImpl implements ImageService {
     TimerTask task = new TimerTask() {
       @Override
       public void run() {
-        LOGGER.info("Sending Email...");
-        emailService.sendMail();
-        LOGGER.info("Email Sent!");
+
+        CloudinaryImage updatedCloudinaryImage = imageRepository.findByIsDeletedAndId(0, id);
+
+        if(updatedCloudinaryImage.getRead().equals(Boolean.FALSE)) {
+          LOGGER.info("Sending Email...");
+          emailService.sendMail();
+          LOGGER.info("Email Sent!");
+        } else {
+          LOGGER.info("Read by User Already");
+        }
       }
     };
     Timer timer = new Timer("Timer");
@@ -214,7 +234,7 @@ public class ImageServiceImpl implements ImageService {
   //this is supposed to be created in outboundserviceimpl, if have time just change it
   private void sendMessage(SensorsFeedbackMap sensorsFeedback) {
 
-    final String uri = "http://socket-fp-soft-eng.herokuapp.com/command-open-door";
+    final String uri = "http://socket-fp-soft-eng.herokuapp.com/command-unlock-door";
 
     RestTemplate restTemplate = new RestTemplate();
     SensorsFeedbackMap result = restTemplate.postForObject(uri, sensorsFeedback, SensorsFeedbackMap.class);

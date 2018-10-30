@@ -36,8 +36,22 @@ public class ImageController {
   @Autowired
   private ImageService imageService;
 
+  @GetMapping(ApiPath.ID)
+  public BaseResponse<CloudinaryImage> getAnImage(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
+          @PathVariable String id
+  ) {
+
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
+
+    CloudinaryImage cloudinaryImage = imageService.getImageById(id);
+
+    return BaseResponseHelper.constructResponse(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getMessage(),
+            null, cloudinaryImage);
+  }
+
   @GetMapping
-  public BaseResponse<List<CloudinaryImage>> getImage(
+  public BaseResponse<List<CloudinaryImage>> getImages(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
   ) {
@@ -51,7 +65,7 @@ public class ImageController {
   }
 
   @GetMapping(ApiPath.WARNING)
-  public BaseResponse<List<CloudinaryImage>> getWarningImage(
+  public BaseResponse<List<CloudinaryImage>> getWarningImages(
           @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @ApiParam(value = "yyyy/MM") @RequestParam @DateTimeFormat(pattern="yyyy/MM") Date date
   ) {
@@ -115,8 +129,11 @@ public class ImageController {
 
   @PutMapping(ApiPath.IS_READ + ApiPath.ID)
   public BaseResponse<CloudinaryImage> updateEmergencyNotification(
+          @ApiIgnore @Valid @ModelAttribute MandatoryRequest mandatoryRequest,
           @PathVariable String id
   ) {
+
+    authService.isTokenValid(mandatoryRequest.getAccessToken());
 
     CloudinaryImage cloudinaryImage = imageService.updateIsRead(id);
 

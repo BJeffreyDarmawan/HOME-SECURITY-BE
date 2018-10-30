@@ -12,6 +12,7 @@ public interface ImageService {
 
   Map<String, String> uploadCapturedImage(MultipartFile aFile);
   Map<String, String> uploadSelfieImage(MultipartFile aFile, String id);
+  CloudinaryImage getImageById(String id);
   List<CloudinaryImage> getImages(Date date);
   List<CloudinaryImage> getWarningImages(Date date);
   CloudinaryImage updateImageMessage(UnlockDoorRequest unlockDoorRequest, String id);
