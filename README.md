@@ -10,9 +10,9 @@ Following are the steps to make archetype for Maven :
 Now you can create a new Maven Project by just running <code>mvn archetype:generate -DarchetypeCatalog=local</code>
 
 
-Final Project BackEnd Details:
+# Final Project BackEnd Details
 
-<Talk about the structure: controller -> service -> dao(repository)>
+Layout Structure: controller -> service -> dao(repository)
   <Class Models are used to be the models for requests, responses, and database collection fields>
     <requests and responses are in rest-web-models; collection model in entity>
 <Talk about all the functions in all the controllers>
