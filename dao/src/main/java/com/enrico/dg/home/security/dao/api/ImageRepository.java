@@ -9,6 +9,6 @@ import java.util.List;
 public interface ImageRepository extends MongoRepository<CloudinaryImage, String> {
 
   List<CloudinaryImage> findAllByCreatedDateAfterAndSensorsFeedbackMessageTypeContainsOrderByCreatedDateDesc(Date date, String msgType);
-  List<CloudinaryImage> findAllByCreatedDateAfter(Date date);
+  List<CloudinaryImage> findAllByCreatedDateAfterOrderByCreatedDateDesc(Date date);
   CloudinaryImage findByIsDeletedAndId(Integer isDeleted, String id);
 }

@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     newUser.setName(user.getName());
     newUser.setEmail(user.getEmail());
-    newUser.setRole(user.getRole());
+    newUser.setRole(user.getRole().toLowerCase());
     newUser.setMacAddress(user.getMacAddress());
     newUser.setSosNumber(user.getSosNumber());
     newUser.setEmergencyNumber(user.getEmergencyNumber());

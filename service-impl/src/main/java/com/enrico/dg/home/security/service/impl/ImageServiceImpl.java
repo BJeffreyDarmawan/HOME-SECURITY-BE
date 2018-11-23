@@ -122,7 +122,7 @@ public class ImageServiceImpl implements ImageService {
   public List<CloudinaryImage> getImages(Date date) {
 
     try{
-      List<CloudinaryImage> cloudinaryImages = imageRepository.findAllByCreatedDateAfter(date);
+      List<CloudinaryImage> cloudinaryImages = imageRepository.findAllByCreatedDateAfterOrderByCreatedDateDesc(date);
 
       return cloudinaryImages;
     } catch (Exception e) {
