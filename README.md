@@ -13,11 +13,11 @@ Now you can create a new Maven Project by just running <code>mvn archetype:gener
 # Final Project BackEnd Details
 
 Layout Structure: Controller -> Service -> Data Access Object(DAO)
-1. Controller is where the endpoints are.
-2. Service contains the logical functionalities.
-  DAO consist of the repository interfaces that will be created in the database; Each repository interface represents a collection.
-  Class Models are used to be the models for requests, responses, and database collections' fields.
-  Requests and Responses are in rest-web-models, collections model are in Entity
+-Controller is where the endpoints are.
+-Service contains the logical functionalities.
+-DAO consist of the repository interfaces that will be created in the database; Each repository interface represents a collection.
+-Class Models are used to be the models for requests, responses, and database collections' fields.
+-Requests and Responses are in rest-web-models, collections model are in Entity
 
 UserController: Manages the CRUD and applications related to user's credentials, including admin/owner
   addUser - adds a user to the database
