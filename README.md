@@ -12,7 +12,7 @@ Now you can create a new Maven Project by just running <code>mvn archetype:gener
 
 # Final Project BackEnd Details
 
-Layout Structure: Controller -> Service -> Data Access Object(DAO)
+Layout Structure: Controller -> Service -> Data Access Object(DAO)<br/>
   Controller is where the endpoints are.
   Service contains the logical functionalities.
   DAO consist of the repository interfaces that will be created in the database; Each repository interface represents a collection.
