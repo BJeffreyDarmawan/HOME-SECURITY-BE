@@ -234,8 +234,8 @@ public class ImageServiceImpl implements ImageService {
   //this is supposed to be created in outboundserviceimpl, if have time just change it
   private void sendMessage(SensorsFeedbackMap sensorsFeedback) {
 
-    final String unlockDoorUri = "http://ae27261b.ngrok.io/command-unlock-door";
-    final String windowNotificationUri = "http://ae27261b.ngrok.io/message-notification";
+    final String unlockDoorUri = "http://178.128.113.69/command-unlock-door";
+    final String windowNotificationUri = "http://178.128.113.69/message-notification";
 
     RestTemplate restTemplate = new RestTemplate();
     SensorsFeedbackMap result;
